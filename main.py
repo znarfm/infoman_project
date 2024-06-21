@@ -5,13 +5,12 @@ st.set_page_config(
     page_title="National Commission of Senior Citizens",
     page_icon="🏠",
     layout="wide",
-    # initial_sidebar_state="collapsed",
+    initial_sidebar_state="collapsed",
 )
 
 conn = st.connection('mysql', type='sql')
-st.image('https://dswdprogram.com/wp-content/uploads/2023/05/ncsc-logo-768x777.jpg', width=150)
-st.title("National Commission of Senior Citizens")
-st.divider()
+st.image('https://dswdprogram.com/wp-content/uploads/2023/05/ncsc-logo-768x777.jpg', width=100)
+st.header("National Commission of Senior Citizens", divider='rainbow')
 mode = st.sidebar.selectbox("Select operation", ["View Tables", "Create", "Read", "Update", "Delete"])
 
 def create():
@@ -27,6 +26,7 @@ def create():
             'income': st.session_state.dep_income,
         })
 
+    st.write("## Create/add a new record")
     with st.form("senior_form"):
         st.write("# Senior Citizen Form")
 
@@ -93,26 +93,40 @@ def create():
 
 
 def view_tables():
+    st.write("## View Tables")
     tables = conn.query("SHOW TABLES;", ttl=600)
-    selected_table = st.selectbox("Select a table", [word.capitalize() for word in tables.values.tolist()])
-    st.write("Selected table: ", selected_table)
+    selected_table = st.selectbox("Select a table", [word.capitalize() for word in tables['Tables_in_project'].tolist()])
 
+    st.write(f"### {selected_table}")
     df = conn.query(f'SELECT * FROM {selected_table};', ttl=600)
     st.dataframe(df, use_container_width=True, hide_index=True)
 
-def read():
-    df = conn.query('SELECT name FROM senior ORDER BY name;', ttl=600)
 
-    st.dataframe(df, hide_index=True, use_container_width=True)
+def read():
+    st.write("## Read/view data of specific record")
+    senior_df = conn.query('SELECT name FROM senior ORDER BY name;', ttl=600)
+    
+    c1, c2 = st.columns([1, 2])
+    # c1.st.dataframe(senior_df, hide_index=True, use_container_width=True)
+    with c1:
+        st.write("### Senior Citizens")
+        selected_name = st.radio("Select a Senior Citizen", senior_df)
+
+    with c2:
+        if selected_name:
+            selected_df = conn.query(f'SELECT * FROM senior WHERE name = "{selected_name}";', ttl=600)
+            st.dataframe(selected_df, hide_index=True, use_container_width=True)
 
 # TODO: this function needs to be updated
 def show_individual(id):
     df = conn.query(f'SELECT * FROM senior WHERE id = {id};', ttl=600)
 
 def update():
+    st.write("## Update a record")
     pass
 
 def delete():
+    st.write("## Delete a record")
     pass
 
 
