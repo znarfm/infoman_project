@@ -9,22 +9,23 @@ st.set_page_config(
 )
 
 conn = st.connection('mysql', type='sql')
-st.image('https://dswdprogram.com/wp-content/uploads/2023/05/ncsc-logo-768x777.jpg', width=100)
+st.image("./images/NCSC.png", width=100)
 st.header("National Commission of Senior Citizens", divider='rainbow', anchor=False)
 mode = st.sidebar.selectbox("Select operation", ["View Tables", "Create", "Read", "Update", "Delete"])
 
 def create():
-    if 'dependents' not in st.session_state:
-        st.session_state.dependents = []
+    # wala to
+    # if 'dependents' not in st.session_state:
+    #     st.session_state.dependents = []
 
-    def add_dependent():
-        st.session_state.dependents.append({
-            'name': st.session_state.dep_name,
-            'is_child': st.session_state.dep_is_child,
-            'is_working': st.session_state.dep_is_working,
-            'occupation': st.session_state.dep_occupation,
-            'income': st.session_state.dep_income,
-        })
+    # def add_dependent():
+    #     st.session_state.dependents.append({
+    #         'name': st.session_state.dep_name,
+    #         'is_child': st.session_state.dep_is_child,
+    #         'is_working': st.session_state.dep_is_working,
+    #         'occupation': st.session_state.dep_occupation,
+    #         'income': st.session_state.dep_income,
+    #     })
 
     st.markdown("## Create/add a new record")
     with st.form("senior_form"):
@@ -50,7 +51,7 @@ def create():
                 blood_type = st.selectbox("Blood Type", ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"], index=None)
             
             religion = st.text_input("Religion")
-
+            # troll
             # contact_number = st.slider("Contact Number", min_value=9000000000, max_value=9999999999, step=1)
             col1, col2 = st.columns(2)
             with col1:
@@ -71,12 +72,10 @@ def create():
             dep_income = st.number_input("Dependent's Income", min_value=0)
             dep_birthdate = st.date_input("Dependent's Birthdate", value=None, format="YYYY-MM-DD", min_value=datetime.date(1900, 1, 1), max_value=datetime.date.today())
             
-            # if st.button("Add Dependent"):
-            #     add_dependent()
             
         income_exp = st.expander("Income Information", expanded=True)
         with income_exp:
-            source = st.selectbox("Source of Income", ["Salary", "Pension", "Business", "Insurance", "Savings", "Stocks"], index=None)
+            source = st.multiselect("Source of Income", ["Salary", "Pension", "Business", "Insurance", "Savings", "Stocks"])
             occupation = st.text_input("Occupation")
             income = st.number_input("Monthly Income", min_value=0)
 
@@ -88,11 +87,14 @@ def create():
         educ_exp = st.expander("Educational Information", expanded=True)
         with educ_exp:
             edu_level = st.selectbox("Highest Level of Education", ["Primary", "Secondary", "Tertiary", "Graduate", "Post-Graduate", "Doctorate"], index=None)
+            sch_name = st.text_input("School Name").upper()
+            sch_address = st.text_input("School Address")
 
 
         submitted = st.form_submit_button("Submit")
         if submitted:
             st.write("Submitted!")
+            st.write(sch_name)
 
 
 def view_tables():
@@ -108,29 +110,59 @@ def view_tables():
 def read():
     st.write("## Read/view data of specific record")
     search = st.text_input("Enter name of senior citizen")
-    search_df = conn.query(f'SELECT * FROM senior WHERE name LIKE "%{search}%";', ttl=600)
-    st.divider()
-    # senior_df = conn.query('SELECT name FROM senior ORDER BY name;', ttl=600)
+    search_df = conn.query(f'SELECT name, referencecode FROM senior WHERE name LIKE "%{search}%" ORDER BY name;', ttl=600)
+
+    if not search_df.empty:
+        search_df['formatted'] = search_df.apply(lambda x: f"{x['name']} ({x['referencecode']})", axis=1)
+        options = search_df["formatted"].tolist()
+        mapping = dict(zip(search_df["formatted"], search_df["referencecode"]))
+
+        st.divider()
     
-    c1, c2 = st.columns([1, 2])
-    # c1.st.dataframe(senior_df, hide_index=True, use_container_width=True)
-    with c1:
-        selected_id = st.radio("Select a Senior Citizen", search_df)
+        c1, c2 = st.columns([1, 3])
 
-    with c2:
-        if selected_id:
-            selected_df = conn.query(f'SELECT * FROM senior WHERE referencecode = "{selected_id}";', ttl=600)
-            st.dataframe(selected_df, hide_index=True, use_container_width=True)
+        with c1:
+            selected_option = st.radio("Select a Senior Citizen", options)
 
+        with c2:
+            if selected_option:
+                selected_id = mapping[selected_option]
+                selected_df = conn.query(f'SELECT * FROM senior WHERE referencecode = "{selected_id}";', ttl=600)
+                st.dataframe(selected_df, hide_index=True, use_container_width=True)
 
-# TODO: this function needs to be updated
-def show_individual(id):
-    df = conn.query(f'SELECT * FROM senior WHERE id = {id};', ttl=600)
-
+# TODO
 def update():
     st.write("## Update a record")
-    pass
+    search = st.text_input("Enter name of senior citizen")
+    search_df = conn.query(f'SELECT name, referencecode FROM senior WHERE name LIKE "%{search}%" ORDER BY name;', ttl=600)
 
+    if not search_df.empty:
+        search_df['formatted'] = search_df.apply(lambda x: f"{x['name']} ({x['referencecode']})", axis=1)
+        options = search_df["formatted"].tolist()
+        mapping = dict(zip(search_df["formatted"], search_df["referencecode"]))
+
+        st.divider()
+    
+        c1, c2 = st.columns([1, 3])
+
+        with c1:
+            selected_option = st.radio("Select a Senior Citizen", options)
+
+        with c2:
+            if selected_option:
+                selected_id = mapping[selected_option]
+                sel_table = st.selectbox("Select a table", ["Senior", "Dependent"])
+                
+                sel_info_df = conn.query(f'SELECT * FROM {sel_table} WHERE referencecode = "{selected_id}";', ttl=600)
+                st.markdown(f"### {sel_table.capitalize()}")
+                st.data_editor(sel_info_df, hide_index=True, use_container_width=True)
+                
+                # sel_dep_df = conn.query(f'SELECT * FROM dependent WHERE referencecode = "{selected_id}";', ttl=600)
+                # st.markdown("### Dependent / Children Information")
+                # st.data_editor(sel_dep_df, hide_index=True, use_container_width=True, num_rows="dynamic")
+
+
+# TODO
 def delete():
     st.write("## Delete a record")
     pass
