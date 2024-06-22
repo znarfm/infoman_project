@@ -8,7 +8,7 @@ We made a senior citizen database application that can do the basic CRUD operati
 
 1. Clone the repository.
 2. Create a new virtual environment using `python -m venv venv`.
-3. Activate the virtual environment using `.\venv\bin\activate` on Windows or `source venv/bin/activate` on Linux.
+3. Activate the virtual environment using `.\venv\Scripts\activate` on Windows or `source venv/bin/activate` on Linux.
 4. Install the dependencies using `pip install -r requirements.txt`.
 5. Create a .streamlit folder and add a secrets.toml file.
     Add the following information to the file:
