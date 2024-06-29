@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_free_text_select import st_free_text_select
 import datetime
 import sql_manager as sm
 
@@ -16,21 +17,16 @@ mode = st.sidebar.radio(
     "Select operation", ["View Tables", "Create", "Read", "Update", "Delete"]
 )
 
+table_name_mapping = {
+    "Dependent": "dependent",
+    "Education": "education",
+    "Health Concern": "healthconcern",
+    "Income": "income",
+    "School": "school",
+    "Senior": "senior"
+}
 
 def create():
-    # wala to
-    # if 'dependents' not in st.session_state:
-    #     st.session_state.dependents = []
-
-    # def add_dependent():
-    #     st.session_state.dependents.append({
-    #         'name': st.session_state.dep_name,
-    #         'is_child': st.session_state.dep_is_child,
-    #         'is_working': st.session_state.dep_is_working,
-    #         'occupation': st.session_state.dep_occupation,
-    #         'income': st.session_state.dep_income,
-    #     })
-
     st.markdown("## Create/add a new record")
     with st.form("senior_form"):
         st.write("### Senior Citizen Form")
@@ -135,25 +131,26 @@ def create():
         submitted = st.form_submit_button("Submit")
         if submitted:
             st.write("Submitted!")
-            st.write(sch_name)
 
 
 def view_tables():
     st.write("## View Tables")
-    tables = conn.query("SHOW TABLES;", ttl=600)
     selected_table = st.selectbox(
         "Select a table",
-        [word.capitalize() for word in tables["Tables_in_project"].tolist()],
+        table_name_mapping.keys(),
     )
 
-    st.write(f"### {selected_table}")
-    df = sm.show_table(conn, selected_table)
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    if selected_table:
+        v_selected_table = table_name_mapping[selected_table]
+        st.write(f"### {selected_table}")
+        df = sm.show_table(conn, v_selected_table)
+        st.dataframe(df, use_container_width=True, hide_index=True)
 
-
+# Bryll
 def read():
+    search = None
     st.write("## Read/view data of specific record")
-    search = st.text_input("Enter name of senior citizen")
+    search = st.text_input("Search for a name of a senior citizen")
     search_df = conn.query(
         f'SELECT name, referencecode FROM senior WHERE name LIKE "%{search}%" ORDER BY name;',
         ttl=600,
@@ -183,13 +180,14 @@ def read():
                 st.dataframe(selected_df, hide_index=True, use_container_width=True)
 
 
-# TODO
+# Bryll
 def update():
     st.write("## Update a record")
-    search = st.text_input("Enter name of senior citizen")
-    search_df = sm.search_senior(conn, search)
+    search = st.text_input("Search for a name of a senior citizen")
+    if search:
+        search_df = sm.search_senior(conn, search)
 
-    if not search_df.empty:
+        # if not search_df.empty:
         search_df["formatted"] = search_df.apply(
             lambda x: f"{x['name']} ({x['referencecode']})", axis=1
         )
@@ -197,35 +195,42 @@ def update():
         mapping = dict(zip(search_df["formatted"], search_df["referencecode"]))
 
         st.divider()
+        if search_df.empty:
+            st.write("No records found")
+        else:
+            c1, c2 = st.columns([1, 3])
+            with c1:
+                    selected_option = st.radio("Select a Senior Citizen", options)
+            with c2:
+                if selected_option:
+                    selected_id = mapping[selected_option]
+                    sel_table = st.selectbox("Select a table", ["Senior", "Dependent"])
 
-        c1, c2 = st.columns([1, 3])
+                    sel_info_df = conn.query(
+                        f'SELECT * FROM {sel_table} WHERE referencecode = "{selected_id}";',
+                        ttl=600,
+                    )
+                    st.markdown(f"### {sel_table.capitalize()}")
+                    st.data_editor(sel_info_df, hide_index=True, use_container_width=True)
 
-        with c1:
-            selected_option = st.radio("Select a Senior Citizen", options)
-
-        with c2:
-            if selected_option:
-                selected_id = mapping[selected_option]
-                sel_table = st.selectbox("Select a table", ["Senior", "Dependent"])
-
-                sel_info_df = conn.query(
-                    f'SELECT * FROM {sel_table} WHERE referencecode = "{selected_id}";',
-                    ttl=600,
-                )
-                st.markdown(f"### {sel_table.capitalize()}")
-                st.data_editor(sel_info_df, hide_index=True, use_container_width=True)
-
-                # sel_dep_df = conn.query(f'SELECT * FROM dependent WHERE referencecode = "{selected_id}";', ttl=600)
-                # st.markdown("### Dependent / Children Information")
-                # st.data_editor(sel_dep_df, hide_index=True, use_container_width=True, num_rows="dynamic")
+                    # sel_dep_df = conn.query(f'SELECT * FROM dependent WHERE referencecode = "{selected_id}";', ttl=600)
+                    # st.markdown("### Dependent / Children Information")
+                    # st.data_editor(sel_dep_df, hide_index=True, use_container_width=True, num_rows="dynamic")
 
 
 # TODO
 def delete():
     st.write("## Delete a record")
-    pass
+    seniors = conn.query("SELECT name, referencecode FROM senior ORDER BY name;", ttl=600)
+    search = st_free_text_select("Search for a name of a senior citizen",
+                                 options=seniors["name"].tolist())
+    if search:
+        st.write(search)
 
-
+def experimental_delete():
+    st.write("## Delete a record from tables")
+    
+    
 match mode:
     case "Create":
         create()
@@ -234,7 +239,7 @@ match mode:
     case "Update":
         update()
     case "Delete":
-        delete()
+        experimental_delete()
     case "View Tables":
         view_tables()
 
