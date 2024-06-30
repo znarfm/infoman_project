@@ -11,11 +11,8 @@ st.set_page_config(
 )
 
 conn = sm.make_connection("mysql", "sql")
-st.logo("./images/NCSC.png")
+st.logo(image="./images/NCSC.png")
 st.sidebar.header("National Commission of Senior Citizens", divider="rainbow", anchor=False)
-# mode = st.sidebar.radio(
-#     "Select operation", ["View Tables", "Create", "Read", "Update", "Delete"]
-# )
 
 
 table_name_mapping = {
@@ -92,23 +89,10 @@ def view_tables():
         st.sidebar.page_link("pages/read.py", label="Read selected record", icon="🔎", disabled=selected_row_df.empty)
     st.sidebar.page_link("pages/update.py", label="Update selected record", icon="✍️", disabled=selected_row_df.empty)
     st.sidebar.page_link("pages/delete.py", label="Delete selected record", icon="🗑️", disabled=selected_row_df.empty)
+    st.sidebar.divider()
+    st.sidebar.page_link("pages/about.py", label="About", icon="❓")
+    
+    st.sidebar.warning("This website is intended solely for academic purposes.", icon="⚠️")
+
 view_tables()
-# st.markdown("""
-#     <style>
-#     .footer {
-#         position: fixed;
-#         left: 0;
-#         bottom: 0;
-#         width: 100%;
-#         background-color: #253C64; /* Background color */
-#         color: #FFFFFF; /* Text color */
-#         text-align: center;
-#         font-size: 12px; /* Font size */
-#         padding: 30px;
-#         border-radius: 10px; /* Border radius */
-#     }
-#     </style>
-#     <div class="footer">
-#         This website is an independent project and is not affiliated with NCSC. It is intended solely for academic purposes.
-#     </div>
-#     """, unsafe_allow_html=True)
+
