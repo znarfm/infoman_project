@@ -5,13 +5,13 @@ import sql_manager as sm
 
 st.set_page_config(
     page_title="National Commission of Senior Citizens",
-    page_icon="🏠",
+    page_icon="./images/NCSC.png",
     layout="wide",
     # initial_sidebar_state="collapsed",
 )
 
 conn = sm.make_connection("mysql", "sql")
-st.sidebar.image("./images/NCSC.png", width=100)
+st.logo("./images/NCSC.png")
 st.sidebar.header("National Commission of Senior Citizens", divider="rainbow", anchor=False)
 # mode = st.sidebar.radio(
 #     "Select operation", ["View Tables", "Create", "Read", "Update", "Delete"]
