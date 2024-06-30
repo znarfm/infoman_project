@@ -1,25 +1,23 @@
 import streamlit as st
-from streamlit_free_text_select import st_free_text_select
 import datetime
+import pandas as pd
 import sql_manager as sm
 
 st.set_page_config(
-    page_title="National Commission of Senior Citizens",
-    page_icon="🏠",
+    page_title="NCSC Form",
+    page_icon="📝",
     layout="wide",
-    # initial_sidebar_state="collapsed",
 )
 
 conn = sm.make_connection("mysql", "sql")
-# st.image("./images/NCSC.png", width=100)
+st.logo(image="./images/NCSC.png")
 st.page_link("main.py", label="Back", icon="🔙")
 st.header("National Commission of Senior Citizens", divider="rainbow", anchor=False)
 
 with st.form("senior_form"):
     st.write("### Senior Citizen Form")
 
-    info_exp = st.expander("Personal Information", expanded=True)
-    with info_exp:
+    with st.expander("Personal Information", expanded=True, icon="ℹ️"):
         name = st.text_input("Full Name")
         address = st.text_input("Address")
 
@@ -63,57 +61,59 @@ with st.form("senior_form"):
 
         spouse = st.text_input("Spouse Name")
 
-    dep_exp = st.expander("Children or Dependent Information", expanded=True)
-    with dep_exp:
-        dep_name = st.text_input("Dependent Name")
-        dep_is_child = st.radio(
-            "Is the dependent a children of the Senior Citizen", ["Yes", "No"]
-        )
-        dep_is_working = st.radio("Is the dependent Working", ["Yes", "No"])
-        dep_occupation = st.text_input("Dependent's Occupation")
-        dep_income = st.number_input("Dependent's Income", min_value=0)
-        dep_birthdate = st.date_input(
-            "Dependent's Birthdate",
-            value=None,
-            format="YYYY-MM-DD",
-            min_value=datetime.date(1900, 1, 1),
-            max_value=datetime.date.today(),
+    with st.expander("Children or Dependent Information", expanded=True, icon="👪"):
+        dependent_df = st.data_editor(
+            data=pd.DataFrame(columns=["Name", "Is Child", "Is Working", "Occupation", "Income", "Birthdate"]),
+            column_config={
+                "Name": st.column_config.TextColumn("Name", required=True),
+                "Is Child": st.column_config.CheckboxColumn("Is a children of the SC?", required=True),
+                "Is Working": st.column_config.CheckboxColumn("Is currently working?", required=True),
+                "Occupation": st.column_config.TextColumn("Occupation"),
+                "Income": st.column_config.NumberColumn("Income", min_value=0),
+                "Birthdate": st.column_config.DateColumn("Birthdate", 
+                                                         format="YYYY-MM-DD",
+                                                         min_value=datetime.date(1900, 1, 1),
+                                                         max_value=datetime.date.today()),
+            },
+            num_rows="dynamic",
+            use_container_width=True,
         )
 
-    income_exp = st.expander("Income Information", expanded=True)
-    with income_exp:
-        source = st.multiselect(
-            "Source of Income",
-            ["Salary", "Pension", "Business", "Insurance", "Savings", "Stocks"],
+    with st.expander("Income Information", expanded=True, icon="🪙"):
+        income_df = st.data_editor(
+            data=pd.DataFrame(columns=["Source", "Occupation", "Amount"]),
+            column_config={
+                "Source": st.column_config.SelectboxColumn("Source", options=["Salary", "Pension", "Business", "Insurance", "Savings", "Stocks"], required=True), 
+                "Occupation": st.column_config.TextColumn("Occupation"),
+                "Amount": st.column_config.NumberColumn("Amount", min_value=0, required=True),
+            },
+            num_rows="dynamic",
+            use_container_width=True,
         )
-        occupation = st.text_input("Occupation")
-        income = st.number_input("Monthly Income", min_value=0)
 
-    health_exp = st.expander("Health Concerns", expanded=True)
-    with health_exp:
-        concern_type = st.selectbox(
-            "Type of Concern",
-            ["Medical", "Dental", "Optical", "Hearing", "Social"],
-            index=None,
+    with st.expander("Health Concerns", expanded=True, icon="🩺"):
+        concern_df = st.data_editor(
+            data=pd.DataFrame(columns=["Type", "Details"]),
+            column_config={
+                "Type": st.column_config.SelectboxColumn("Type", options=["Medical", "Dental", "Optical", "Hearing", "Social"], required=True),
+                "Details": st.column_config.TextColumn("Details", required=True),
+            },
+            num_rows="dynamic",
+            use_container_width=True,
         )
-        con_details = st.text_input("Details of Concern")
 
-    educ_exp = st.expander("Educational Information", expanded=True)
-    with educ_exp:
-        edu_level = st.selectbox(
-            "Highest Level of Education",
-            [
-                "Primary",
-                "Secondary",
-                "Tertiary",
-                "Graduate",
-                "Post-Graduate",
-                "Doctorate",
-            ],
-            index=None,
+    with st.expander("Educational Information", expanded=True, icon="🎓"):
+        schools_df = sm.get_schools(conn)
+        schools = schools_df["SchoolName"].to_list()
+        education_df = st.data_editor(
+            data=pd.DataFrame(columns=["Level", "School Name"]),
+            column_config={
+                "Level": st.column_config.SelectboxColumn("Level", options=["Primary", "Secondary", "Tertiary"], required=True),
+                "School Name": st.column_config.SelectboxColumn("School Name", options=schools,required=True),
+            },
+            num_rows="dynamic",
+            use_container_width=True,
         )
-        sch_name = st.text_input("School Name").upper()
-        sch_address = st.text_input("School Address")
 
     submitted = st.form_submit_button("Submit")
     if submitted:
