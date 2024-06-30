@@ -57,18 +57,7 @@ def view_tables():
     else:
         st.session_state.selected_code = None
 
-
-
-
-
-    st.sidebar.divider()
-    st.sidebar.markdown("### Operations")
-    if selected_table == "Senior":
-        st.sidebar.page_link("pages/add.py", label="Create new record", icon="📝")
-        st.sidebar.page_link("pages/read.py", label="Read selected record", icon="🔎")
-    st.sidebar.page_link("pages/update.py", label="Update selected record", icon="✍️")
-    st.sidebar.page_link("pages/delete.py", label="Delete selected record", icon="🗑️")
-
+    # Display the table
     if selected_table:
         v_selected_table = table_name_mapping[selected_table]
         st.write(f"### {selected_table}")
@@ -96,8 +85,16 @@ def view_tables():
             if "referencecode" not in st.session_state:
                 st.session_state.referencecode = selected_row_df["ReferenceCode"].values[0]
 
-view_tables()
 
+    st.sidebar.divider()
+    st.sidebar.markdown("### Operations")
+    if selected_table == "Senior":
+        st.sidebar.page_link("pages/add.py", label="Create new record", icon="📝")
+        st.sidebar.page_link("pages/read.py", label="Read selected record", icon="🔎", disabled=True if selected_row_df.empty else False)
+    st.sidebar.page_link("pages/update.py", label="Update selected record", icon="✍️", disabled=True if selected_row_df.empty else False)
+    st.sidebar.page_link("pages/delete.py", label="Delete selected record", icon="🗑️", disabled=True if selected_row_df.empty else False)
+
+view_tables()
 # st.markdown("""
 #     <style>
 #     .footer {
