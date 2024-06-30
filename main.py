@@ -29,25 +29,37 @@ table_name_mapping = {
 
 def view_tables():
     # Select a specific table
+    selected_table = st.sidebar.selectbox(
+        "Select a table",
+        table_name_mapping.keys(),
+    )
     if "selected_table" not in st.session_state:
-        selected_table = st.sidebar.selectbox(
-            "Select a table",
-            table_name_mapping.keys(),
-        )
-        st.session_state.table = selected_table
+        st.session_state.selected_table = selected_table
 
     # Filter rows for a specific senior
-    seniors_df = sm.show_table(conn, "senior")
-    seniors_df["Display"] = seniors_df['Name'] + " (" + seniors_df['ReferenceCode'].astype(str) + ")"
+    name_code_df = sm.get_senior_name_and_code(conn)
+    name_code_df["Display"] = name_code_df['Name'] + " (" + name_code_df['ReferenceCode'].astype(str) + ")"
+
+    # Prepend "all" option to the list
+    senior_options = ["All"] + name_code_df["Display"].tolist()
+
+    selected_senior = st.sidebar.selectbox(
+        "Filter to show records for a specific senior",
+        senior_options,
+        index=0     # index 0 is "All"
+    )
     if "selected_senior" not in st.session_state:
-        selected_senior = st.sidebar.selectbox(
-            "Filter to show records for a specific senior",
-            seniors_df["Display"],
-            index=None
-        )
-        if selected_senior:
-            selected_senior = seniors_df[seniors_df["Display"] == selected_senior]["ReferenceCode"].values[0]
-            st.session_state.referencecode = selected_senior
+        st.session_state.selected_senior = selected_senior
+
+    if selected_senior != "All":
+        selected_code = name_code_df[name_code_df["Display"] == selected_senior]["ReferenceCode"].values[0]
+        st.session_state.selected_code = selected_code
+    else:
+        st.session_state.selected_code = None
+
+
+
+
 
     st.sidebar.divider()
     st.sidebar.markdown("### Operations")
@@ -56,21 +68,23 @@ def view_tables():
         st.sidebar.page_link("pages/read.py", label="Read selected record", icon="🔎")
     st.sidebar.page_link("pages/update.py", label="Update selected record", icon="✍️")
     st.sidebar.page_link("pages/delete.py", label="Delete selected record", icon="🗑️")
-    # create_btn = st.sidebar.button("Create new record")
-    # read_btn = st.sidebar.button("Read selected record") if selected_table == "Senior" else None
-    # update_btn = st.sidebar.button("Update selected record")
-    # delete_btn = st.sidebar.button("Delete selected record")
 
     if selected_table:
         v_selected_table = table_name_mapping[selected_table]
         st.write(f"### {selected_table}")
-        df = sm.show_table(conn, v_selected_table)
+
+        if st.session_state.selected_code:
+            df = sm.filter_reference_code(conn, v_selected_table, st.session_state.selected_code)
+        else:
+            df = sm.show_table(conn, v_selected_table)
+
         event = st.dataframe(df, 
                     use_container_width=True, 
                     hide_index=True,
                     selection_mode="single-row",
                     on_select="rerun",
                     )
+        
         st.markdown("### Selected Record")
         sel = event.selection.rows
         selected_row_df = df.iloc[sel]
@@ -80,7 +94,7 @@ def view_tables():
                     hide_index=True,
                     )
             if "referencecode" not in st.session_state:
-                st.session_state["referencecode"] = selected_row_df["ReferenceCode"].values[0]
+                st.session_state.referencecode = selected_row_df["ReferenceCode"].values[0]
 
 view_tables()
 
