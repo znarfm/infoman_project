@@ -1,4 +1,5 @@
 import streamlit as st
+from sqlalchemy.sql import text
 
 
 def make_connection(name, type):
@@ -94,6 +95,7 @@ def show_table(conn, table_name):
         ttl=600,
     )
 
+# used for filtering by reference code
 def get_senior_name_and_code(conn):
     return conn.query(
         """SELECT Name, ReferenceCode 
@@ -101,6 +103,7 @@ def get_senior_name_and_code(conn):
         ttl=600,
     )
 
+# used for getting the available schools for a senior
 def get_schools(conn):
     return conn.query(
         """SELECT SchoolID, SchoolName
@@ -109,6 +112,7 @@ def get_schools(conn):
         ttl=600,
     )
 
+# used displaying the table based on the filter
 def filter_reference_code(conn, table_name, reference_code):
     return conn.query(
         f"""SELECT * 
@@ -116,3 +120,86 @@ def filter_reference_code(conn, table_name, reference_code):
             WHERE ReferenceCode = '{reference_code}';""",
         ttl=600,
     )
+
+# INSERT statements
+def insert_senior(conn, senior_data):
+    with conn.session as session:
+        query = text("""
+            INSERT INTO senior (name, address, birthdate, birthplace, civilstatus, sexatbirth, bloodtype, religion, primarycontactnum, activeemailaddress, fathername, mothername, spousename)
+            VALUES (:name, :address, :birthdate, :birthplace, :civilstatus, :sexatbirth, :bloodtype, :religion, :primarycontactnum, :activeemailaddress, :fathername, :mothername, :spousename)
+        """)
+        result = session.execute(query, {
+            "name": senior_data["name"],
+            "address": senior_data["address"],
+            "birthdate": senior_data["birthdate"],
+            "birthplace": senior_data["birthplace"],
+            "civilstatus": senior_data["status"],
+            "sexatbirth": senior_data["sex"],
+            "bloodtype": senior_data["blood_type"],
+            "religion": senior_data["religion"],
+            "primarycontactnum": senior_data["contact_number"],
+            "activeemailaddress": senior_data["email"],
+            "fathername": senior_data["father"],
+            "mothername": senior_data["mother"],
+            "spousename": senior_data["spouse"]
+        })
+        session.commit()
+        return result.inserted_primary_key[0]
+
+def insert_dependent(conn, dependent_data):
+    with conn.session as session:
+        query = text("""
+        INSERT INTO dependent (referencecode, depname, depischild, depisworking, depoccupation, depincome, depbirthdate)
+        VALUES (:referencecode, :depname, :depischild, :depisworking, :depoccupation, :depincome, :depbirthdate)
+        """)
+        session.execute(query, {
+            "referencecode": dependent_data["reference_code"],
+            "depname": dependent_data["name"],
+            "depischild": dependent_data["is_child"],
+            "depisworking": dependent_data["is_working"],
+            "depoccupation": dependent_data["occupation"],
+            "depincome": dependent_data["income"],
+            "depbirthdate": dependent_data["birthdate"]
+        })
+        session.commit()
+
+def insert_income(conn, income_data):
+    with conn.session as session:
+        query = text("""
+        INSERT INTO income (referencecode, sourceofincome, occupation, monthlyincome)
+        VALUES (:referencecode, :sourceofincome, :occupation, :monthlyincome)
+        """)
+        session.execute(query, {
+            "referencecode": income_data["reference_code"],
+            "sourceofincome": income_data["source"],
+            "occupation": income_data["occupation"],
+            "monthlyincome": income_data["amount"]
+        })
+        session.commit()
+
+def insert_health_concern(conn, concern_data):
+    with conn.session as session:
+        query = text("""
+        INSERT INTO healthconcern (referencecode, concerntype, concerndetails)
+        VALUES (:referencecode, :concerntype, :concerndetails)
+        """)
+        session.execute(query, {
+            "referencecode": concern_data["reference_code"],
+            "concerntype": concern_data["type"],
+            "concerndetails": concern_data["details"]
+        })
+        session.commit()
+
+def insert_education(conn, education_data):
+    with conn.session as session:
+        query = text("""
+        INSERT INTO education (referencecode, educationstage, yearstarted, graduationyear)
+        VALUES (:referencecode, :educationstage, :yearstarted, :graduationyear)
+        """)
+        session.execute(query, {
+            "referencecode": education_data["reference_code"],
+            "educationstage": education_data["level"],
+            "yearstarted": education_data["school_started"],
+            "graduationyear": education_data["school_ended"]
+        })
+        session.commit()
