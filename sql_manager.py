@@ -94,12 +94,25 @@ def show_table(conn, table_name):
         ttl=600,
     )
 
-
-def search_senior(conn, search):
+def get_senior_name_and_code(conn):
     return conn.query(
-        f"""SELECT name, referencecode 
-            FROM senior 
-            WHERE name LIKE '%{search}%' 
-            ORDER BY name;""",
+        """SELECT Name, ReferenceCode 
+            FROM Senior;""",
+        ttl=600,
+    )
+
+def get_schools(conn):
+    return conn.query(
+        """SELECT SchoolID, SchoolName
+            FROM school
+            ORDER BY SchoolName;""",
+        ttl=600,
+    )
+
+def filter_reference_code(conn, table_name, reference_code):
+    return conn.query(
+        f"""SELECT * 
+            FROM {table_name} 
+            WHERE ReferenceCode = '{reference_code}';""",
         ttl=600,
     )
