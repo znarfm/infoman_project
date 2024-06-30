@@ -82,18 +82,16 @@ def view_tables():
                     use_container_width=True, 
                     hide_index=True,
                     )
-            if "referencecode" not in st.session_state:
-                st.session_state.referencecode = selected_row_df["ReferenceCode"].values[0]
-
+            st.session_state.referencecode = selected_row_df["ReferenceCode"].values[0]
+            st.session_state.table_pk = selected_row_df.iloc[0].values[0]
 
     st.sidebar.divider()
     st.sidebar.markdown("### Operations")
     if selected_table == "Senior":
         st.sidebar.page_link("pages/add.py", label="Create new record", icon="📝")
-        st.sidebar.page_link("pages/read.py", label="Read selected record", icon="🔎", disabled=True if selected_row_df.empty else False)
-    st.sidebar.page_link("pages/update.py", label="Update selected record", icon="✍️", disabled=True if selected_row_df.empty else False)
-    st.sidebar.page_link("pages/delete.py", label="Delete selected record", icon="🗑️", disabled=True if selected_row_df.empty else False)
-
+        st.sidebar.page_link("pages/read.py", label="Read selected record", icon="🔎", disabled=selected_row_df.empty)
+    st.sidebar.page_link("pages/update.py", label="Update selected record", icon="✍️", disabled=selected_row_df.empty)
+    st.sidebar.page_link("pages/delete.py", label="Delete selected record", icon="🗑️", disabled=selected_row_df.empty)
 view_tables()
 # st.markdown("""
 #     <style>
