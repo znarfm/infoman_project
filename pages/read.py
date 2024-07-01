@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide",
 )
 
-st.sidebar.warning("Application is still under development.", icon="⚠️")
+st.warning("This section is still under development.", icon="⚠️")
 
 conn = sm.make_connection()
 st.logo(image="./images/NCSC.png")

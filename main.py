@@ -82,18 +82,17 @@ def view_tables():
             st.session_state.referencecode = selected_row_df["ReferenceCode"].values[0]
             st.session_state.table_pk = selected_row_df.iloc[0].values[0]
 
-    with st.sidebar():
-        st.divider()
-        st.markdown("### Operations")
-        if selected_table == "Senior":
-            st.page_link("pages/add.py", label="Create new record", icon="📝")
-            st.page_link("pages/read.py", label="Read selected record", icon="🔎", disabled=selected_row_df.empty)
-        st.page_link("pages/update.py", label="Update selected record", icon="✍️", disabled=selected_row_df.empty)
-        st.page_link("pages/delete.py", label="Delete selected record", icon="🗑️", disabled=selected_row_df.empty)
-        st.divider()
-        st.page_link("pages/about.py", label="About", icon="❓")
-        
-        st.info("This website is intended solely for academic purposes.", icon="📙")
+    st.sidebar.divider()
+    st.sidebar.markdown("### Operations")
+    if selected_table == "Senior":
+        st.sidebar.page_link("pages/add.py", label="Create new record", icon="📝")
+        st.sidebar.page_link("pages/read.py", label="Read selected record", icon="🔎", disabled=selected_row_df.empty)
+    st.sidebar.page_link("pages/update.py", label="Update selected record", icon="✍️", disabled=selected_row_df.empty)
+    st.sidebar.page_link("pages/delete.py", label="Delete selected record", icon="🗑️", disabled=selected_row_df.empty)
+    st.sidebar.divider()
+    st.sidebar.page_link("pages/about.py", label="About", icon="❓")
+    
+    st.sidebar.info("This website is intended solely for academic purposes.", icon="📙")
 
 view_tables()
 
