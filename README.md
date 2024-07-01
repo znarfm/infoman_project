@@ -1,5 +1,10 @@
 # Information Management Project
 
+## Note
+
+This branch is for testing purposes, including development of the database, application, and for [cloud deployment tests](https://ncsc-db.streamlit.app/).
+This branch also utilizes sqlite instead of mysql compared to the other branches.
+
 ## Overview
 
 We made a senior citizen database application that can do the basic CRUD operations.The application is based on the National Commission of Senior Citizens (NCSC) information form.
@@ -10,19 +15,4 @@ We made a senior citizen database application that can do the basic CRUD operati
 2. Create a new virtual environment using `python -m venv venv`.
 3. Activate the virtual environment using `.\venv\Scripts\activate` on Windows or `source venv/bin/activate` on Linux.
 4. Install the dependencies using `pip install -r requirements.txt`.
-5. Create a .streamlit folder and add a secrets.toml file.
-    Add the following information to the file:
-
-    ```toml
-    [connections.mysql]
-
-    dialect = "mysql"
-    host = "localhost"
-    port = 3306
-    database = "project"
-    username = "<username>"
-    password = "<password>"
-    query = { charset = 'utf8mb4' }
-    ```
-
-6. Run the application using `streamlit run main.py`, and your browser should open automatically.
+5. Run the application using `streamlit run main.py`, and your browser should open automatically.
