@@ -9,8 +9,9 @@ st.set_page_config(
     layout="wide",
 )
 
-conn = sm.make_connection()
+st.sidebar.warning("Application is still under development.", icon="⚠️")
 
+conn = sm.make_connection()
 st.logo(image="./images/NCSC.png")
 st.page_link("main.py", label="Back", icon="🔙")
 st.header("National Commission of Senior Citizens", divider="rainbow", anchor=False)
