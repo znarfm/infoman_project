@@ -1,7 +1,6 @@
 import streamlit as st
-from streamlit_free_text_select import st_free_text_select
-import datetime
 import sql_manager as sm
+import pandas as pd
 
 st.set_page_config(
     page_title="National Commission of Senior Citizens",
@@ -10,7 +9,7 @@ st.set_page_config(
     # initial_sidebar_state="collapsed",
 )
 
-conn = sm.make_connection("mysql", "sql")
+conn = sm.make_connection()
 st.logo(image="./images/NCSC.png")
 st.sidebar.header("National Commission of Senior Citizens", divider="rainbow", anchor=False)
 
@@ -30,11 +29,10 @@ def view_tables():
         "Select a table",
         table_name_mapping.keys(),
     )
-    if "selected_table" not in st.session_state:
-        st.session_state.selected_table = selected_table
+    st.session_state.selected_table = selected_table
 
     # Filter rows for a specific senior
-    name_code_df = sm.get_senior_name_and_code(conn)
+    name_code_df = pd.read_sql_query("SELECT ReferenceCode, Name FROM senior", conn)
     name_code_df["Display"] = name_code_df['Name'] + " (" + name_code_df['ReferenceCode'].astype(str) + ")"
 
     # Prepend "all" option to the list
@@ -60,9 +58,9 @@ def view_tables():
         st.write(f"### {selected_table}")
 
         if st.session_state.selected_code:
-            df = sm.filter_reference_code(conn, v_selected_table, st.session_state.selected_code)
+            df = pd.read_sql_query(f"SELECT * FROM {v_selected_table} WHERE ReferenceCode = '{st.session_state.selected_code}'", conn)
         else:
-            df = sm.show_table(conn, v_selected_table)
+            df = pd.read_sql_query(f"SELECT * FROM {v_selected_table}", conn)
 
         event = st.dataframe(df, 
                     use_container_width=True, 

@@ -9,13 +9,11 @@ st.set_page_config(
     layout="wide",
 )
 
-conn = sm.make_connection("mysql", "sql")
+conn = sm.make_connection()
+
 st.logo(image="./images/NCSC.png")
 st.page_link("main.py", label="Back", icon="🔙")
 st.header("National Commission of Senior Citizens", divider="rainbow", anchor=False)
-
-status_options = {"Single": "S", "Married": "M", "Separated": "SE", "Widowed": "W"}
-sex_options = {"Male": "M", "Female": "F"}
 
 def senior_form():
     with st.form("senior_form"):
@@ -41,10 +39,10 @@ def senior_form():
             col1, col2, col3 = st.columns(3)
             with col1:
                 status = st.selectbox(
-                    "Status", options=status_options, index=None
+                    "Status", options=["Single", "Married", "Separated", "Widowed"], index=None
                 )
             with col2:
-                sex = st.selectbox("Sex", options=sex_options, index=None)
+                sex = st.selectbox("Sex", options=["Male", "Female"], index=None)
             with col3:
                 blood_type = st.selectbox(
                     "Blood Type",
@@ -110,17 +108,17 @@ def senior_form():
             )
 
         with st.expander("Educational Information", expanded=True, icon="🎓"):
-            schools_df = sm.get_schools(conn)
+            schools_df = pd.read_sql_query("SELECT SchoolID, SchoolName FROM school ORDER BY SchoolName", conn)
             schools = schools_df["SchoolName"].to_list()
-            education_df = pd.DataFrame(columns=["Level", "School Name", "Year Started", "Year Completed"])
+            education_df = pd.DataFrame(columns=["Education Level", "School Name", "Year Started", "Year Completed"])
             education_df = st.data_editor(
                 data=education_df,
                 column_config={
-                    "Level": st.column_config.SelectboxColumn("Level", options=["Primary", "Secondary", "Tertiary"], required=True),
+                    "Education Level": st.column_config.SelectboxColumn("Level", options=["Primary", "Secondary", "Tertiary"], required=True),
                     "School Name": st.column_config.SelectboxColumn("School Name", options=schools,required=True),
-                    "Year Started": st.column_config.NumberColumn("Year Started",
+                    "Year Started": st.column_config.NumberColumn("Year Started", format="%f",
                                                                 min_value=1900, max_value=datetime.date.today().year),
-                    "Year Completed": st.column_config.NumberColumn("Year Completed",
+                    "Year Completed": st.column_config.NumberColumn("Year Completed", format="%f",
                                                                 min_value=1900, max_value=datetime.date.today().year),
                 },
                 num_rows="dynamic",
@@ -129,7 +127,8 @@ def senior_form():
 
         submitted = st.form_submit_button("Submit")
         if submitted:
-            summary = {
+            education_df["SchoolID"] = education_df["School Name"].apply(lambda x: schools_df[schools_df["SchoolName"] == x]["SchoolID"].values[0])
+            st.session_state.summary = {
             "Personal Information": {
                 "Name": name,
                 "Address": address,
@@ -150,55 +149,6 @@ def senior_form():
             "Health Concerns": concern_df.to_dict(orient="records"),
             "Education": education_df.to_dict(orient="records"),
             }
-
-            confirmation(summary)
-
-
-@st.experimental_dialog(title="Confirmation dialog", width="large")
-def confirmation(summary):
-    st.write(summary)
-
-    confirm_btn = st.button("Confirm")
-
-    if confirm_btn:
-        s = summary["Personal Information"]
-        senior_data = {
-        "name": s["Name"],
-        "address": s["Address"],
-        "birthdate": s["Birthdate"],
-        "birthplace": s["Birthplace"],
-        "status": status_options[s["Status"]],
-        "sex": sex_options[s["Sex"]],
-        "blood_type": s["Blood Type"],
-        "religion": s["Religion"],
-        "contact_number": s["Contact Number"],
-        "email": s["Email"],
-        "father": s["Father"],
-        "mother": s["Mother"],
-        "spouse": s["Spouse"],
-        }
-        st.write(senior_data)
-        reference_code = sm.insert_senior(conn, senior_data) 
-
-        # Insert dependents
-        for dep in summary["Dependents"]:
-            dep["reference_code"] = reference_code
-            sm.insert_dependent(conn, dep)
-
-        # Insert income
-        for inc in summary["Income"]:
-            inc["reference_code"] = reference_code
-            sm.insert_income(conn, inc)
-
-        # Insert health concerns
-        for health in summary["Health Concerns"]:
-            health["reference_code"] = reference_code
-            sm.insert_health_concern(conn, health)
-
-        # Insert education
-        for edu in summary["Education"]:
-            edu["reference_code"] = reference_code
-            sm.insert_education(conn, edu)
-
+            st.switch_page("pages/confirm_add.py")
 
 senior_form()
