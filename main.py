@@ -1,6 +1,7 @@
 import streamlit as st
 import sql_manager as sm
 import pandas as pd
+import datetime
 
 st.set_page_config(
     page_title="National Commission of Senior Citizens",
@@ -59,6 +60,14 @@ def view_tables():
         v_selected_table = table_name_mapping[selected_table]
         st.write(f"### {selected_table}")
 
+        if selected_table == "Dependent":
+            colconfig = {
+                "DepIsChild": st.column_config.CheckboxColumn("Dependent is children of SC"),
+                "DepIsWorking": st.column_config.CheckboxColumn("Dependent is working"),
+            }
+        else:
+            colconfig = {}
+
         if st.session_state.selected_code:
             df = pd.read_sql_query(f"SELECT * FROM {v_selected_table} WHERE ReferenceCode = '{st.session_state.selected_code}'", conn)
         else:
@@ -69,12 +78,14 @@ def view_tables():
                     hide_index=True,
                     selection_mode="single-row",
                     on_select="rerun",
+                    column_config=colconfig
                     )
         
         st.markdown("### Selected Record")
         sel = event.selection.rows
         selected_row_df = df.iloc[sel]
         if not selected_row_df.empty:
+            # For debugging
             st.dataframe(selected_row_df, 
                     use_container_width=True, 
                     hide_index=True,
