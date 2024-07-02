@@ -8,23 +8,38 @@ st.set_page_config(
     layout="wide",
 )
 
-st.warning("This section can only delete from the 'Senior' table as of now.", icon="⚠️")
-
 conn = sm.make_connection()
 st.logo(image="./images/NCSC.png")
 st.page_link("main.py", label="Back", icon="🔙")
 st.header("National Commission of Senior Citizens", divider="rainbow", anchor=False)
 
-st.write(st.session_state.table_pk)
-st.write(st.session_state.referencecode)
+st.warning("Section needs testing.", icon="🧪")
+
+# st.write(st.session_state.table_pk)
+# st.write(st.session_state.referencecode)
+
+tables = ["senior", "education", "healthconcern", "income", "dependent"]
 
 if st.session_state.selected_table == "Senior":
-    df = pd.read_sql_query(f"SELECT * FROM senior WHERE referencecode = {st.session_state.referencecode};", conn)
-    st.dataframe(df, hide_index=True, use_container_width=True)
+    for table in tables:
+        df = pd.read_sql_query(f"SELECT * FROM {table} WHERE referencecode = {st.session_state.referencecode};", conn)
+        st.dataframe(df, hide_index=True, use_container_width=True)
 
-    st.write("Are you sure you want to delete this record?")
-        
+    st.write("Are you sure you want to delete this record and its related records?")
     del_btn = st.button("Yes, delete")
     if del_btn:
         sm.delete_senior(st.session_state.referencecode)
+        st.success("Record deleted successfully!")
+else:
+    table = st.session_state.selected_table.lower()
+    pk = st.session_state.table_pk
+
+    df = pd.read_sql_query(f"SELECT * FROM {table} WHERE id = {pk};", conn)
+    st.dataframe(df, hide_index=True, use_container_width=True)
+    
+    st.write(f"Are you sure you want to delete this record from {table}?")
+    
+    del_btn = st.button("Yes, delete")
+    if del_btn:
+        sm.delete_record(table, pk)
         st.success("Record deleted successfully!")
