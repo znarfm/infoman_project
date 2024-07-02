@@ -4,86 +4,85 @@ import pandas as pd
 def make_connection():
     return sqlite3.connect("projectdb.db")
 
+def create_tables(conn):
+    sql_statements = [
+        "PRAGMA foreign_keys = off;",
+        "BEGIN TRANSACTION;",
+        """
+        CREATE TABLE IF NOT EXISTS dependent (
+            DepID INTEGER PRIMARY KEY AUTOINCREMENT, 
+            ReferenceCode INTEGER NOT NULL, 
+            DepName TEXT NOT NULL, 
+            DepIsChild INTEGER CHECK(DepIsChild IN (0, 1)) NOT NULL, 
+            DepIsWorking INTEGER CHECK(DepIsWorking IN (0, 1)) NOT NULL, 
+            DepOccupation TEXT, 
+            DepIncome REAL, 
+            DepBirthdate DATE NOT NULL,
+            FOREIGN KEY (ReferenceCode) REFERENCES senior (ReferenceCode)
+        );
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS education (
+            EducID INTEGER PRIMARY KEY AUTOINCREMENT, 
+            ReferenceCode INTEGER NOT NULL, 
+            SchoolID TEXT NOT NULL, 
+            EducationStage TEXT CHECK(EducationStage IN ('Primary', 'Secondary', 'Tertiary')) NOT NULL, 
+            YearStarted TEXT NOT NULL, 
+            GraduationYear TEXT NOT NULL,
+            FOREIGN KEY (ReferenceCode) REFERENCES senior (ReferenceCode),
+            FOREIGN KEY (SchoolID) REFERENCES school (SchoolID)
+        );
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS healthconcern (
+            ConcernID INTEGER PRIMARY KEY AUTOINCREMENT, 
+            ReferenceCode INTEGER NOT NULL, 
+            ConcernType TEXT CHECK(ConcernType IN ('Medical', 'Dental', 'Vision', 'Hearing', 'Social')) NOT NULL, 
+            ConcernDetails TEXT NOT NULL,
+            FOREIGN KEY (ReferenceCode) REFERENCES senior (ReferenceCode)
+        );
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS income (
+            IncomeID INTEGER PRIMARY KEY AUTOINCREMENT, 
+            ReferenceCode INTEGER NOT NULL, 
+            SourceOfIncome TEXT CHECK(SourceOfIncome IN ('Salary', 'Pension', 'Business', 'Insurance', 'Savings', 'Stocks')) NOT NULL, 
+            Occupation TEXT, 
+            MonthlyIncome REAL NOT NULL DEFAULT 0,
+            FOREIGN KEY (ReferenceCode) REFERENCES senior (ReferenceCode)
+        );
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS school (
+            SchoolID INTEGER PRIMARY KEY AUTOINCREMENT,
+            SchoolName TEXT NOT NULL,
+            SchoolAddress TEXT NOT NULL
+        );
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS senior (
+            ReferenceCode INTEGER PRIMARY KEY AUTOINCREMENT,
+            Name TEXT NOT NULL,
+            Address TEXT NOT NULL,
+            BirthDate DATE NOT NULL,
+            BirthPlace TEXT NOT NULL,
+            CivilStatus TEXT NOT NULL CHECK(CivilStatus IN ('Single', 'Married', 'Widowed', 'Separated')),
+            SexAtBirth TEXT NOT NULL CHECK(SexAtBirth IN ('Male', 'Female')),
+            BloodType TEXT NOT NULL CHECK(BloodType IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')),
+            PrimaryContactNum TEXT,
+            ActiveEmailAddress TEXT,
+            Religion TEXT NOT NULL CHECK(Religion IN ('Roman Catholic', 'Islam', 'Iglesia ni Cristo', 'Jehovah''s Witnesses', 'Evangelical', 'Baptist', 'Mormon', 'Buddhist', 'Hindu', 'Others')),
+            SpouseName TEXT,
+            FatherName TEXT NOT NULL,
+            MotherName TEXT NOT NULL
+        );
+        """,
+        "COMMIT TRANSACTION;",
+        "PRAGMA foreign_keys = on;"
+    ]
 
-# def create_tables(conn):
-#     conn.execute(
-#         """
-#         CREATE TABLE IF NOT EXISTS `senior` (
-#         `ReferenceCode` int NOT NULL AUTO_INCREMENT,
-#         `Name` varchar(100) NOT NULL,
-#         `Address` varchar(150) NOT NULL,
-#         `BirthDate` date NOT NULL,
-#         `BirthPlace` varchar(150) NOT NULL,
-#         `CivilStatus` enum('S','M','W','SE') NOT NULL,
-#         `SexAtBirth` enum('M','F') NOT NULL,
-#         `BloodType` enum('A+','A-','B+','B-','AB+','AB-','O+','O-') NOT NULL,
-#         `PrimaryContactNum` varchar(13) DEFAULT NULL,
-#         `ActiveEmailAddress` varchar(150) DEFAULT NULL,
-#         `Religion` enum('Roman Catholic','Islam','Iglesia ni Cristo','Jehovah''s Witnesses','Evangelical','Baptist','Mormon','Buddhist','Hindu','Others') NOT NULL,
-#         `SpouseName` varchar(100) DEFAULT NULL,
-#         `FatherName` varchar(100) NOT NULL,
-#         `MotherName` varchar(100) NOT NULL,
-#         PRIMARY KEY (`ReferenceCode`)
-#         ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-#         CREATE TABLE IF NOT EXISTS `dependent` (
-#         `DepID` int NOT NULL AUTO_INCREMENT,
-#         `ReferenceCode` int NOT NULL,
-#         `DepName` varchar(100) NOT NULL,
-#         `DepIsChild` tinyint NOT NULL,
-#         `DepIsWorking` tinyint NOT NULL,
-#         `DepOccupation` varchar(50) DEFAULT NULL,
-#         `DepIncome` float DEFAULT NULL,
-#         `DepBirthdate` date NOT NULL,
-#         PRIMARY KEY (`DepID`,`ReferenceCode`),
-#         KEY `refe_idx` (`ReferenceCode`),
-#         CONSTRAINT `fk_dependent_senior` FOREIGN KEY (`ReferenceCode`) REFERENCES `senior` (`ReferenceCode`)
-#         ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-#         CREATE TABLE IF NOT EXISTS `education` (
-#         `EducID` int NOT NULL AUTO_INCREMENT,
-#         `ReferenceCode` int NOT NULL,
-#         `SchoolID` int NOT NULL,
-#         `EducationStage` text NOT NULL,
-#         `YearStarted` year NOT NULL,
-#         `GraduationYear` year NOT NULL,
-#         PRIMARY KEY (`EducID`),
-#         KEY `fk_education_senior_idx` (`ReferenceCode`),
-#         KEY `fk_education_school_idx` (`SchoolID`),
-#         CONSTRAINT `fk_education_school` FOREIGN KEY (`SchoolID`) REFERENCES `school` (`SchoolID`),
-#         CONSTRAINT `fk_education_senior` FOREIGN KEY (`ReferenceCode`) REFERENCES `senior` (`ReferenceCode`)
-#         ) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-#         CREATE TABLE IF NOT EXISTS `healthconcern` (
-#         `ConcernID` int NOT NULL AUTO_INCREMENT,
-#         `ReferenceCode` int NOT NULL,
-#         `ConcernType` enum('Medical','Dental','Vision','Hearing','Social') NOT NULL,
-#         `ConcernDetails` varchar(100) NOT NULL,
-#         PRIMARY KEY (`ConcernID`),
-#         KEY `fk_healthconcern_senior_idx` (`ReferenceCode`),
-#         CONSTRAINT `fk_healthconcern_senior` FOREIGN KEY (`ReferenceCode`) REFERENCES `senior` (`ReferenceCode`)
-#         ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-#         /*!40101 SET character_set_client = @saved_cs_client */;
-
-#         CREATE TABLE IF NOT EXISTS `income` (
-#         `IncomeID` int NOT NULL AUTO_INCREMENT,
-#         `ReferenceCode` int NOT NULL,
-#         `SourceOfIncome` enum('Salary','Pension','Business','Insurance','Savings','Stocks') NOT NULL,
-#         `Occupation` varchar(100) DEFAULT NULL,
-#         `MonthlyIncome` float NOT NULL DEFAULT '0',
-#         PRIMARY KEY (`IncomeID`),
-#         KEY `fk_income_senior_idx` (`ReferenceCode`),
-#         CONSTRAINT `fk_income_senior` FOREIGN KEY (`ReferenceCode`) REFERENCES `senior` (`ReferenceCode`)
-#         ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-#         CREATE TABLE IF NOT EXISTS `school` (
-#         `SchoolID` int NOT NULL AUTO_INCREMENT,
-#         `SchoolName` varchar(100) NOT NULL,
-#         `SchoolAddress` varchar(150) NOT NULL,
-#         PRIMARY KEY (`SchoolID`)
-#         ) ENGINE=InnoDB AUTO_INCREMENT=567921 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-#         """
-#     )
+    for statement in sql_statements:
+        conn.execute(statement)
 
 # INSERT statements
 def insert_senior(senior_data):
