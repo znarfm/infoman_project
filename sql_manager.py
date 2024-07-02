@@ -179,9 +179,29 @@ def insert_education(education_data):
 
 # DELETE statements
 def delete_senior(reference_code):
+    referencecode = int(reference_code)
     with make_connection() as conn:
         cursor = conn.cursor()
-        delete_query = "DELETE FROM senior WHERE ReferenceCode = ?"
-        cursor.execute(delete_query, (int(reference_code),))
-        conn.commit()
+        # Delete related records in other tables
+        cursor.execute("DELETE FROM dependent WHERE referencecode = ?", (referencecode,))
+        cursor.execute("DELETE FROM education WHERE referencecode = ?", (referencecode,))
+        cursor.execute("DELETE FROM healthconcern WHERE referencecode = ?", (referencecode,))
+        cursor.execute("DELETE FROM income WHERE referencecode = ?", (referencecode,))
         
+        # Delete senior itself
+        cursor.execute("DELETE FROM senior WHERE ReferenceCode = ?", (referencecode, ))
+        conn.commit()
+
+def delete_record(table, tbl_pk):
+    table_pk_mapping = {
+        "dependent": "DepID",
+        "education": "EducID",
+        "income": "IncomeID",
+        "healthconcern": "ConcernID"
+    }
+    tbl_pk = int(tbl_pk)
+    col_name = table_pk_mapping.get(table)
+    with make_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute(f"DELETE FROM {table} WHERE {col_name} = ?", (tbl_pk, ))
+        conn.commit()

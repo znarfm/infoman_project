@@ -33,8 +33,15 @@ if st.session_state.selected_table == "Senior":
 else:
     table = st.session_state.selected_table.lower()
     pk = st.session_state.table_pk
+    table_pk_mapping = {
+        "dependent": "DepID",
+        "education": "EducID",
+        "income": "IncomeID",
+        "healthconcern": "ConcernID"
+    }
 
-    df = pd.read_sql_query(f"SELECT * FROM {table} WHERE id = {pk};", conn)
+    col_name = table_pk_mapping.get(table)
+    df = pd.read_sql_query(f"SELECT * FROM {table} WHERE {col_name} = {pk};", conn)
     st.dataframe(df, hide_index=True, use_container_width=True)
     
     st.write(f"Are you sure you want to delete this record from {table}?")
