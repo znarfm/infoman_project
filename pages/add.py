@@ -9,12 +9,12 @@ st.set_page_config(
     layout="wide",
 )
 
-st.warning("Section needs testing.", icon="🧪")
 
 conn = sm.make_connection()
 st.logo(image="./images/NCSC.png")
-st.page_link("main.py", label="Back", icon="🔙")
 st.header("National Commission of Senior Citizens", divider="rainbow", anchor=False)
+st.warning("Section needs testing.", icon="🧪")
+st.page_link("main.py", label="Back", icon="🔙")
 
 def senior_form():
     with st.form("senior_form"):
@@ -174,21 +174,16 @@ def senior_form():
 
 @st.experimental_dialog("Confirmation", width="large")
 def confirmation(summary):
-    st.write("### Personal Information")
-    st.dataframe(pd.DataFrame([summary["Personal Information"]]), hide_index=True)
+    table_name_list = ["Personal Information", "Dependents", "Income", "Health Concerns", "Education"]
+    for table_name in table_name_list:
+        table_name_df = pd.DataFrame([summary[table_name]])
+        st.write(f"### {table_name}")
+        if table_name_df.empty:
+            st.write("No record will be added for this category.")
+        else:
+            st.dataframe(table_name_df, hide_index=True, use_container_width=True)
 
-    st.write("### Dependents")
-    st.dataframe(pd.DataFrame(summary["Dependents"]), hide_index=True)
-
-    st.write("### Income")
-    st.dataframe(pd.DataFrame(summary["Income"]), hide_index=True)
-
-    st.write("### Health Concerns")
-    st.dataframe(pd.DataFrame(summary["Health Concerns"]), hide_index=True)
-
-    st.write("### Education")
-    st.dataframe(pd.DataFrame(summary["Education"]), hide_index=True)
-
+    st.divider()
     confirm_btn = st.button("Confirm")
 
     if confirm_btn:
@@ -230,5 +225,8 @@ def confirmation(summary):
         for edu in summary["Education"]:
             edu["reference_code"] = reference_code
             sm.insert_education(edu)
+
+        st.success("Record added successfully!", icon="✅")
+        st.page_link("main.py", label="Back to Homepage", icon="🏠")
 
 senior_form()
