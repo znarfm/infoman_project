@@ -9,7 +9,7 @@ st.set_page_config(
     layout="wide",
 )
 
-st.sidebar.warning("This section can add records across all tables, yet dialog boxes are still under development.", icon="⚠️")
+st.warning("This section can add records across all tables, yet dialog boxes are still under development.", icon="⚠️")
 
 conn = sm.make_connection()
 st.logo(image="./images/NCSC.png")
@@ -19,15 +19,16 @@ st.header("National Commission of Senior Citizens", divider="rainbow", anchor=Fa
 def senior_form():
     with st.form("senior_form"):
         st.write("### Senior Citizen Form")
+        st.info("All fields marked with * are required.", icon="ℹ️")
 
-        with st.expander("Personal Information", expanded=True, icon="ℹ️"):
-            name = st.text_input("Full Name")
-            address = st.text_input("Address")
+        with st.expander("Personal Information", expanded=True, icon="📒"):
+            name = st.text_input("Full Name*")
+            address = st.text_input("Address*")
 
             col1, col2 = st.columns(2)
             with col1:
                 birthdate = st.date_input(
-                    "Birthdate",
+                    "Birthdate*",
                     value=None,
                     format="YYYY-MM-DD",
                     min_value=datetime.date(1900, 1, 1),
@@ -35,32 +36,32 @@ def senior_form():
                     - datetime.timedelta(days=60 * 365.25),
                 )
             with col2:
-                birthplace = st.text_input("Birthplace")
+                birthplace = st.text_input("Birthplace*")
 
             col1, col2, col3 = st.columns(3)
             with col1:
                 status = st.selectbox(
-                    "Status", options=["Single", "Married", "Separated", "Widowed"], index=None
+                    "Status*", options=["Single", "Married", "Separated", "Widowed"], index=None
                 )
             with col2:
-                sex = st.selectbox("Sex", options=["Male", "Female"], index=None)
+                sex = st.selectbox("Sex*", options=["Male", "Female"], index=None)
             with col3:
                 blood_type = st.selectbox(
-                    "Blood Type",
-                    ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+                    "Blood Type*",
+                    ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "Unknown"],
                     index=None,
                 )
 
-            religion = st.selectbox("Religion", options=['Roman Catholic', 'Islam', 'Iglesia ni Cristo', 'Jehovah''s Witnesses', 'Evangelical', 'Baptist', 'Mormon', 'Buddhist', 'Hindu', 'Others'], index=None)
+            religion = st.selectbox("Religion*", options=['Roman Catholic', 'Islam', 'Iglesia ni Cristo', 'Jehovah''s Witnesses', 'Evangelical', 'Baptist', 'Mormon', 'Buddhist', 'Hindu', 'Others'], index=None)
             # troll
             # contact_number = st.slider("Contact Number", min_value=9000000000, max_value=9999999999, step=1)
             col1, col2 = st.columns(2)
             with col1:
-                contact_number = st.text_input("Primary Contact Number")
-                father = st.text_input("Father's Name")
+                contact_number = st.text_input("Contact Number")
+                father = st.text_input("Father's Name*")
             with col2:
                 email = st.text_input("Email Address")
-                mother = st.text_input("Mother's Name")
+                mother = st.text_input("Mother's Name*")
 
             spouse = st.text_input("Spouse Name")
 
@@ -70,14 +71,15 @@ def senior_form():
                 data=dependent_df,
                 column_config={
                     "Name": st.column_config.TextColumn("Name", required=True),
-                    "Is Child": st.column_config.CheckboxColumn("Is a children of the SC?", required=True),
-                    "Is Working": st.column_config.CheckboxColumn("Is currently working?", required=True),
+                    "Is Child": st.column_config.CheckboxColumn("Is a children of the SC?", required=True, default=False),
+                    "Is Working": st.column_config.CheckboxColumn("Is currently working?", required=True, default=False),
                     "Occupation": st.column_config.TextColumn("Occupation"),
                     "Income": st.column_config.NumberColumn("Income", min_value=0),
                     "Birthdate": st.column_config.DateColumn("Birthdate", 
                                                             format="YYYY-MM-DD",
                                                             min_value=datetime.date(1900, 1, 1),
-                                                            max_value=datetime.date.today()),
+                                                            max_value=datetime.date.today(),
+                                                            required=True),
                 },
                 num_rows="dynamic",
                 use_container_width=True,
@@ -117,9 +119,9 @@ def senior_form():
                 column_config={
                     "Education Level": st.column_config.SelectboxColumn("Level", options=["Primary", "Secondary", "Tertiary"], required=True),
                     "School Name": st.column_config.SelectboxColumn("School Name", options=schools,required=True),
-                    "Year Started": st.column_config.NumberColumn("Year Started", format="%f",
+                    "Year Started": st.column_config.NumberColumn("Year Started", format="%f", required=True,
                                                                 min_value=1900, max_value=datetime.date.today().year),
-                    "Year Completed": st.column_config.NumberColumn("Year Completed", format="%f",
+                    "Year Completed": st.column_config.NumberColumn("Year Completed", format="%f", required=True,
                                                                 min_value=1900, max_value=datetime.date.today().year),
                 },
                 num_rows="dynamic",
@@ -128,10 +130,8 @@ def senior_form():
 
         submitted = st.form_submit_button("Submit")
         if submitted:
-            education_df["SchoolID"] = education_df["School Name"].apply(lambda x: schools_df[schools_df["SchoolName"] == x]["SchoolID"].values[0])
-            summary = {
-            "Personal Information": {
-                "Name": name,
+            fields = {
+                "Full Name": name,
                 "Address": address,
                 "Birthdate": birthdate,
                 "Birthplace": birthplace,
@@ -140,18 +140,40 @@ def senior_form():
                 "Blood Type": blood_type,
                 "Religion": religion,
                 "Contact Number": contact_number,
-                "Email": email,
-                "Father": father,
-                "Mother": mother,
-                "Spouse": spouse
-                },
-            "Dependents": dependent_df.to_dict(orient="records"),
-            "Income": income_df.to_dict(orient="records"),
-            "Health Concerns": concern_df.to_dict(orient="records"),
-            "Education": education_df.to_dict(orient="records"),
+                "Email Address": email,
+                "Father's Name": father,
+                "Mother's Name": mother
             }
-            # st.switch_page("pages/confirm_add.py")
-            confirmation(summary)
+
+            missing_fields = [field_name for field_name, field_value in fields.items() if not field_value]
+
+            if missing_fields:
+                st.error(f"Please fill in the following required fields: {', '.join(missing_fields)}")
+            else:
+                education_df["SchoolID"] = education_df["School Name"].apply(lambda x: schools_df[schools_df["SchoolName"] == x]["SchoolID"].values[0])
+                summary = {
+                "Personal Information": {
+                    "Name": name,
+                    "Address": address,
+                    "Birthdate": birthdate,
+                    "Birthplace": birthplace,
+                    "Status": status,
+                    "Sex": sex,
+                    "Blood Type": blood_type,
+                    "Religion": religion,
+                    "Contact Number": contact_number,
+                    "Email": email,
+                    "Father": father,
+                    "Mother": mother,
+                    "Spouse": spouse
+                    },
+                "Dependents": dependent_df.to_dict(orient="records"),
+                "Income": income_df.to_dict(orient="records"),
+                "Health Concerns": concern_df.to_dict(orient="records"),
+                "Education": education_df.to_dict(orient="records"),
+                }
+                # st.switch_page("pages/confirm_add.py")
+                confirmation(summary)
 
 @st.experimental_dialog("Confirmation", width="large")
 def confirmation(summary):
