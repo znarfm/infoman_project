@@ -18,18 +18,23 @@ st.warning("Section needs testing.", icon="🧪")
 # st.write(st.session_state.table_pk)
 # st.write(st.session_state.referencecode)
 
-tables = ["senior", "education", "healthconcern", "income", "dependent"]
+tables_dict = {"Senior":"senior", "Education":"education", "Health Concern":"healthconcern", "Income":"income", "Dependent":"dependent"}
 
 if st.session_state.selected_table == "Senior":
-    for table in tables:
-        df = pd.read_sql_query(f"SELECT * FROM {table} WHERE referencecode = {st.session_state.referencecode};", conn)
+    for k, v in tables_dict.items():
+        st.markdown(f"### {k} Table")
+        df = pd.read_sql_query(f"SELECT * FROM {v} WHERE referencecode = {st.session_state.referencecode};", conn)
         st.dataframe(df, hide_index=True, use_container_width=True)
+        if k == "Senior":
+            senior_name = df['Name'].iloc[0] 
 
-    st.write("Are you sure you want to delete this record and its related records?")
-    del_btn = st.button("Yes, delete")
+    st.write(f"Are you sure you want to delete all related records of {senior_name}?")
+    del_btn = st.button("Yes, delete.")
     if del_btn:
         sm.delete_senior(st.session_state.referencecode)
-        st.success("Record deleted successfully!")
+        st.toast(f"All related records of {senior_name} deleted successfully!", icon="🗑️")
+        st.divider()
+        st.page_link("main.py", label="Back to Home", icon="🏠")
 else:
     table = st.session_state.selected_table.lower()
     pk = st.session_state.table_pk
@@ -49,4 +54,6 @@ else:
     del_btn = st.button("Yes, delete")
     if del_btn:
         sm.delete_record(table, pk)
-        st.success("Record deleted successfully!")
+        st.toast("Selected {table} Record deleted successfully!", icon="🗑️")
+        st.divider()
+        st.page_link("main.py", label="Back to Home", icon="🏠")
