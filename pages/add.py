@@ -9,7 +9,7 @@ st.set_page_config(
     layout="wide",
 )
 
-st.warning("This section can add records across all tables, yet dialog boxes are still under development.", icon="⚠️")
+st.warning("Section needs testing.", icon="🧪")
 
 conn = sm.make_connection()
 st.logo(image="./images/NCSC.png")
@@ -139,8 +139,6 @@ def senior_form():
                 "Sex": sex,
                 "Blood Type": blood_type,
                 "Religion": religion,
-                "Contact Number": contact_number,
-                "Email Address": email,
                 "Father's Name": father,
                 "Mother's Name": mother
             }
@@ -172,12 +170,24 @@ def senior_form():
                 "Health Concerns": concern_df.to_dict(orient="records"),
                 "Education": education_df.to_dict(orient="records"),
                 }
-                # st.switch_page("pages/confirm_add.py")
                 confirmation(summary)
 
 @st.experimental_dialog("Confirmation", width="large")
 def confirmation(summary):
-    st.write(summary)
+    st.write("### Personal Information")
+    st.dataframe(pd.DataFrame([summary["Personal Information"]]), hide_index=True)
+
+    st.write("### Dependents")
+    st.dataframe(pd.DataFrame(summary["Dependents"]), hide_index=True)
+
+    st.write("### Income")
+    st.dataframe(pd.DataFrame(summary["Income"]), hide_index=True)
+
+    st.write("### Health Concerns")
+    st.dataframe(pd.DataFrame(summary["Health Concerns"]), hide_index=True)
+
+    st.write("### Education")
+    st.dataframe(pd.DataFrame(summary["Education"]), hide_index=True)
 
     confirm_btn = st.button("Confirm")
 
@@ -198,7 +208,6 @@ def confirmation(summary):
         "mother": s["Mother"],
         "spouse": s["Spouse"],
         }
-        st.write(senior_data)
         reference_code = sm.insert_senior(senior_data) 
 
         # Insert dependents
