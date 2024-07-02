@@ -1,5 +1,6 @@
 import streamlit as st
 import datetime
+import pandas as pd
 import sql_manager as sm
 
 st.set_page_config(
@@ -17,10 +18,7 @@ st.header("National Commission of Senior Citizens", divider="rainbow", anchor=Fa
 
 table = st.session_state.selected_table
 selected = st.session_state.referencecode
-selected_df = conn.query(
-    f"SELECT * FROM {table} WHERE referencecode = '{selected}';",
-    ttl=600,
-)
+selected_df = pd.read_sql_query(f"SELECT * FROM {table} WHERE referencecode = '{selected}';", conn)
 st.dataframe(selected_df, hide_index=True, use_container_width=True)
 
 st.write(st.session_state.table_pk)
