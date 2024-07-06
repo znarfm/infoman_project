@@ -44,10 +44,9 @@ def view_tables():
     selected_senior = st.sidebar.selectbox(
         "Filter to show records for a specific senior",
         senior_options,
-        index=0     # index 0 is "All"
+        index=0,
+        disabled=st.session_state.selected_table == "School",
     )
-    if "selected_senior" not in st.session_state:
-        st.session_state.selected_senior = selected_senior
 
     if selected_senior != "All":
         selected_code = name_code_df[name_code_df["Display"] == selected_senior]["ReferenceCode"].values[0]
@@ -68,7 +67,7 @@ def view_tables():
         else:
             colconfig = {}
 
-        if st.session_state.selected_code:
+        if st.session_state.selected_code and selected_table != "School":
             df = pd.read_sql_query(f"SELECT * FROM {v_selected_table} WHERE ReferenceCode = '{st.session_state.selected_code}'", conn)
         else:
             df = pd.read_sql_query(f"SELECT * FROM {v_selected_table}", conn)
