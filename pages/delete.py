@@ -42,7 +42,8 @@ else:
         "dependent": "DepID",
         "education": "EducID",
         "income": "IncomeID",
-        "healthconcern": "ConcernID"
+        "healthconcern": "ConcernID",
+        "school": "SchoolID"
     }
 
     col_name = table_pk_mapping.get(table)
