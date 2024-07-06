@@ -89,7 +89,7 @@ def view_tables():
                     use_container_width=True, 
                     hide_index=True,
                     )
-            st.session_state.referencecode = selected_row_df["ReferenceCode"].values[0]
+            st.session_state.referencecode = selected_row_df["ReferenceCode"].values[0] if selected_table != "School" else selected_row_df["SchoolID"].values[0]
             st.session_state.table_pk = selected_row_df.iloc[0].values[0]
 
     st.sidebar.divider()
