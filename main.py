@@ -56,6 +56,18 @@ def view_tables():
         v_selected_table = table_name_mapping[selected_table]
         st.write(f"### {selected_table}")
 
+
+        if st.session_state.selected_code and selected_table != "School":
+            df = pd.read_sql_query(f"SELECT * FROM {v_selected_table} WHERE ReferenceCode = '{st.session_state.selected_code}'", conn)
+        else:
+            df = pd.read_sql_query(f"SELECT * FROM {v_selected_table}", conn)
+
+        # Remove , from keys
+        if selected_table in ["Senior", "School"]:
+            df.iloc[:, 0] = df.iloc[:, 0].astype(str)
+        else:
+            df.iloc[:, :2] = df.iloc[:, :2].astype(str)
+
         if selected_table == "Dependent":
             colconfig = {
                 "DepIsChild": st.column_config.CheckboxColumn("Dependent is children of SC"),
@@ -63,11 +75,6 @@ def view_tables():
             }
         else:
             colconfig = {}
-
-        if st.session_state.selected_code and selected_table != "School":
-            df = pd.read_sql_query(f"SELECT * FROM {v_selected_table} WHERE ReferenceCode = '{st.session_state.selected_code}'", conn)
-        else:
-            df = pd.read_sql_query(f"SELECT * FROM {v_selected_table}", conn)
 
         event = st.dataframe(df, 
                     use_container_width=True, 
