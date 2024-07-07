@@ -174,6 +174,21 @@ def insert_education(education_data):
         ))
         conn.commit()
 
+def insert_school(school_data):
+    with make_connection() as conn:
+        cursor = conn.cursor()
+        insert_query = """
+        INSERT INTO school (SchoolID, SchoolName, SchoolAddress)
+        VALUES (?, ?, ?)
+        """
+        cursor.execute(insert_query, (
+            school_data["School ID"],
+            school_data["School Name"],
+            school_data["School Address"]
+        ))
+        conn.commit()
+        return True
+
 # UPDATE statements
 # TODO
 
@@ -197,7 +212,8 @@ def delete_record(table, tbl_pk):
         "dependent": "DepID",
         "education": "EducID",
         "income": "IncomeID",
-        "healthconcern": "ConcernID"
+        "healthconcern": "ConcernID",
+        "school": "SchoolID"
     }
     tbl_pk = int(tbl_pk)
     col_name = table_pk_mapping.get(table)
