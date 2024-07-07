@@ -175,11 +175,11 @@ def senior_form():
 def confirmation(summary):
     table_name_list = ["Personal Information", "Dependents", "Income", "Health Concerns", "Education"]
     for table_name in table_name_list:
-        table_name_df = pd.DataFrame([summary[table_name]])
+        table_name_df = pd.DataFrame([summary[table_name]] if table_name == "Personal Information" else [summary for summary in summary[table_name]]) 
         st.write(f"### {table_name}")
         if table_name_df.empty:
-            st.write("No record will be added for this category.")
-        else:
+            st.write("No record will be added for this category.") 
+        else: 
             st.dataframe(table_name_df, hide_index=True, use_container_width=True)
 
     st.divider()
@@ -188,19 +188,19 @@ def confirmation(summary):
     if confirm_btn:
         s = summary["Personal Information"]
         senior_data = {
-        "name": s["Name"],
-        "address": s["Address"],
-        "birthdate": s["Birthdate"],
-        "birthplace": s["Birthplace"],
-        "status": s["Status"],
-        "sex": s["Sex"],
-        "blood_type": s["Blood Type"],
-        "religion": s["Religion"],
-        "contact_number": s["Contact Number"],
-        "email": s["Email"],
-        "father": s["Father"],
-        "mother": s["Mother"],
-        "spouse": s["Spouse"],
+            "name": s["Name"],
+            "address": s["Address"],
+            "birthdate": s["Birthdate"],
+            "birthplace": s["Birthplace"],
+            "status": s["Status"],
+            "sex": s["Sex"],
+            "blood_type": s["Blood Type"],
+            "religion": s["Religion"],
+            "contact_number": s["Contact Number"],
+            "email": s["Email"],
+            "father": s["Father"],
+            "mother": s["Mother"],
+            "spouse": s["Spouse"],
         }
         reference_code = sm.insert_senior(senior_data) 
 
@@ -212,7 +212,6 @@ def confirmation(summary):
         # Insert income
         for inc in summary["Income"]:
             inc["reference_code"] = reference_code
-            st.write(inc)
             sm.insert_income(inc)
 
         # Insert health concerns
