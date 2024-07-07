@@ -53,6 +53,10 @@ else:
 
     col_name_pk = table_pk_mapping.get(table)
     df = pd.read_sql_query(f"SELECT * FROM {table} WHERE {col_name_pk} = {pk};", conn)
+    if table == "school":
+        df.iloc[:, 0] = df.iloc[:, 0].astype(str)
+    else:
+        df.iloc[:, 1] = df.iloc[:, 1].astype(str)
     st.dataframe(df, hide_index=True, use_container_width=True)
     
     st.write(f"Are you sure you want to delete this record from **{st.session_state.selected_table}** table?")
