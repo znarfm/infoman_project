@@ -34,12 +34,9 @@ def view_tables():
     )
     st.session_state.selected_table = selected_table
 
-    # Filter rows for a specific senior
     name_code_df = pd.read_sql_query("SELECT ReferenceCode, Name FROM senior", conn)
     name_code_df["Display"] = name_code_df['Name'] + " (" + name_code_df['ReferenceCode'].astype(str) + ")"
-
-    # Prepend "all" option to the list
-    senior_options = ["All"] + name_code_df["Display"].tolist()
+    senior_options = ["All"] + name_code_df["Display"].tolist()     # Prepend "all" to the list of options
 
     selected_senior = st.sidebar.selectbox(
         "Filter to show records for a specific senior",
@@ -97,6 +94,8 @@ def view_tables():
     if selected_table == "Senior":
         st.sidebar.page_link("pages/add.py", label="Create new record", icon="📝")
         st.sidebar.page_link("pages/read.py", label="Read selected record", icon="🔎", disabled=selected_row_df.empty)
+    if selected_table == "School":
+        st.sidebar.page_link("pages/add_school.py", label="Add new school", icon="🏫")
     st.sidebar.page_link("pages/update.py", label="Update selected record", icon="✍️", disabled=selected_row_df.empty)
     st.sidebar.page_link("pages/delete.py", label="Delete selected record", icon="🗑️", disabled=selected_row_df.empty)
     st.sidebar.divider()
