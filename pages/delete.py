@@ -30,7 +30,7 @@ if st.session_state.selected_table == "Senior":
             senior_name = df['Name'].iloc[0] 
             df.iloc[:, 0] = df.iloc[:, 0].astype(str)
         else:
-            df.iloc[:, 1] = df.iloc[:, 1].astype(str)
+            df.iloc[:, :2] = df.iloc[:, :2].astype(str)
         st.dataframe(df, hide_index=True, use_container_width=True)
 
     st.write(f"Are you sure you want to delete all related records of **{senior_name}**?")
