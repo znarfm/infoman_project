@@ -107,6 +107,7 @@ def view_tables():
     st.sidebar.page_link("pages/update.py", label="Update selected record", icon="✍️", disabled=selected_row_df.empty)
     st.sidebar.page_link("pages/delete.py", label="Delete selected record", icon="🗑️", disabled=selected_row_df.empty)
     st.sidebar.divider()
+    st.sidebar.page_link("pages/problems.py", label="SQL Query Problems", icon="🧪")
     st.sidebar.page_link("pages/about.py", label="About", icon="❓")
     
     with bottom():
