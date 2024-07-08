@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Mon Jul 8 13:25:56 2024
+-- File generated with SQLiteStudio v3.4.4 on Mon Jul 8 23:51:29 2024
 --
 -- Text encoding used: System
 --
@@ -7,7 +7,8 @@ PRAGMA foreign_keys = off;
 BEGIN TRANSACTION;
 
 -- Table: dependent
-CREATE TABLE IF NOT EXISTS dependent (
+DROP TABLE IF EXISTS dependent;
+CREATE TABLE dependent (
     DepID INTEGER PRIMARY KEY AUTOINCREMENT, 
     ReferenceCode INTEGER NOT NULL, 
     DepName TEXT NOT NULL, 
@@ -33,9 +34,19 @@ INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, 
 INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (13, 9, 'Josefina Santos', 1, 1, 'Lawyer', 80000.0, '1968-03-14');
 INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (14, 10, 'Luis Reyes', 1, 1, 'Engineer', 60000.0, '1972-12-10');
 INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (15, 11, 'Celia Cruz', 1, 0, NULL, NULL, '1977-09-05');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (16, 13, 'Michael Ventura', 1, 0, 'None', 0.0, '1980-08-24');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (17, 13, 'Jobert Ventura', 1, 0, 'None', 0.0, '1982-07-10');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (18, 13, 'Reymark Jovenal', 0, 0, 'None', 0.0, '1984-03-03');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (19, 13, 'Donna Ventura', 1, 0, 'None', 0.0, '1986-04-04');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (20, 14, 'Sheena Reyes', 1, 0, 'None', 0.0, '1978-04-27');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (21, 15, 'Kapitan Malaya', 1, 0, 'Barangay Captain', 25000.0, '1990-05-23');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (22, 15, 'Reyster Mendoza', 0, 0, 'None', 0.0, '2015-12-31');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (23, 16, 'Jesusa Sining', 1, 0, 'Saleslady', 8000.0, '1987-12-25');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (24, 18, 'Kyungmin Rivera', 1, 0, 'Manager', 42000.0, '1988-10-03');
 
 -- Table: education
-CREATE TABLE IF NOT EXISTS education (
+DROP TABLE IF EXISTS education;
+CREATE TABLE education (
     EducID INTEGER PRIMARY KEY AUTOINCREMENT, 
     ReferenceCode INTEGER NOT NULL, 
     SchoolID TEXT NOT NULL, 
@@ -71,9 +82,22 @@ INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStar
 INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (24, 11, '567914', 'Secondary', '1964', '1968');
 INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (25, 12, '567905', 'Primary', '1952', '1958');
 INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (26, 12, '567915', 'Secondary', '1958', '1962');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (27, 13, '567890', 'Primary', '1957', '1963');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (28, 14, '567902', 'Primary', '1952', '1958');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (29, 14, '567912', 'Secondary', '1959', '1963');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (30, 15, '567905', 'Primary', '1967', '1973');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (31, 15, '567915', 'Secondary', '1973', '1977');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (32, 15, '123123', 'Tertiary', '1977', '1981');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (33, 16, '567896', 'Primary', '1964', '1970');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (34, 16, '567896', 'Secondary', '1970', '1974');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (35, 16, '567896', 'Tertiary', '1974', '1978');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (36, 18, '567892', 'Primary', '1970', '1976');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (37, 18, '567892', 'Secondary', '1976', '1980');
+INSERT INTO education (EducID, ReferenceCode, SchoolID, EducationStage, YearStarted, GraduationYear) VALUES (38, 18, '567892', 'Tertiary', '1980', '1984');
 
 -- Table: healthconcern
-CREATE TABLE IF NOT EXISTS healthconcern (
+DROP TABLE IF EXISTS healthconcern;
+CREATE TABLE healthconcern (
     ConcernID INTEGER PRIMARY KEY AUTOINCREMENT, 
     ReferenceCode INTEGER NOT NULL, 
     ConcernType TEXT CHECK(ConcernType IN ('Medical', 'Dental', 'Vision', 'Hearing', 'Social')) NOT NULL, 
@@ -98,9 +122,16 @@ INSERT INTO healthconcern (ConcernID, ReferenceCode, ConcernType, ConcernDetails
 INSERT INTO healthconcern (ConcernID, ReferenceCode, ConcernType, ConcernDetails) VALUES (16, 10, 'Hearing', 'Tinnitus');
 INSERT INTO healthconcern (ConcernID, ReferenceCode, ConcernType, ConcernDetails) VALUES (17, 11, 'Dental', 'Tooth Sensitivity');
 INSERT INTO healthconcern (ConcernID, ReferenceCode, ConcernType, ConcernDetails) VALUES (18, 12, 'Medical', 'Hypertension');
+INSERT INTO healthconcern (ConcernID, ReferenceCode, ConcernType, ConcernDetails) VALUES (19, 13, 'Dental', 'Teeth Erosion');
+INSERT INTO healthconcern (ConcernID, ReferenceCode, ConcernType, ConcernDetails) VALUES (20, 13, 'Social', 'Depression');
+INSERT INTO healthconcern (ConcernID, ReferenceCode, ConcernType, ConcernDetails) VALUES (21, 14, 'Vision', 'Glaucoma');
+INSERT INTO healthconcern (ConcernID, ReferenceCode, ConcernType, ConcernDetails) VALUES (22, 15, 'Hearing', 'Otosclerosis ');
+INSERT INTO healthconcern (ConcernID, ReferenceCode, ConcernType, ConcernDetails) VALUES (23, 16, 'Social', 'Anxiety');
+INSERT INTO healthconcern (ConcernID, ReferenceCode, ConcernType, ConcernDetails) VALUES (24, 17, 'Medical', 'Prostate Cancer');
 
 -- Table: income
-CREATE TABLE IF NOT EXISTS income (
+DROP TABLE IF EXISTS income;
+CREATE TABLE income (
     IncomeID INTEGER PRIMARY KEY AUTOINCREMENT, 
     ReferenceCode INTEGER NOT NULL, 
     SourceOfIncome TEXT CHECK(SourceOfIncome IN ('Salary', 'Pension', 'Business', 'Insurance', 'Savings', 'Stocks')) NOT NULL, 
@@ -132,15 +163,30 @@ INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, Monthly
 INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (22, 11, 'Business', 'Consultant', 22000.0);
 INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (23, 12, 'Pension', NULL, 13500.0);
 INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (24, 12, 'Savings', NULL, 14000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (25, 13, 'Business', 'Entrepreneur', 50000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (26, 13, 'Pension', 'Entrepreneur', 30000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (27, 13, 'Stocks', 'Entrepreneur', 45000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (28, 14, 'Pension', NULL, 10000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (29, 14, 'Insurance', NULL, 40000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (30, 14, 'Stocks', NULL, 60000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (31, 15, 'Salary', 'Teacher', 50000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (32, 15, 'Stocks', 'Teacher', 45000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (33, 15, 'Insurance', 'Teacher', 10000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (34, 16, 'Pension', NULL, 10000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (35, 18, 'Salary', 'Architect', 70000.0);
+INSERT INTO income (IncomeID, ReferenceCode, SourceOfIncome, Occupation, MonthlyIncome) VALUES (36, 18, 'Stocks', 'Architect', 80000.0);
 
 -- Table: school
-CREATE TABLE IF NOT EXISTS school (
+DROP TABLE IF EXISTS school;
+CREATE TABLE school (
     SchoolID INTEGER PRIMARY KEY AUTOINCREMENT,
     SchoolName TEXT NOT NULL,
     SchoolAddress TEXT NOT NULL
 );
 INSERT INTO school (SchoolID, SchoolName, SchoolAddress) VALUES (123123, 'Polytechnic University of the Philippines', 'Manila City');
 INSERT INTO school (SchoolID, SchoolName, SchoolAddress) VALUES (123456, 'Ewan Elementary School', 'Ewan City');
+INSERT INTO school (SchoolID, SchoolName, SchoolAddress) VALUES (125487, 'Antipolo Dela Virgen School Inc.', 'Antipolo City');
+INSERT INTO school (SchoolID, SchoolName, SchoolAddress) VALUES (156487, 'San Jose National High School', 'Antipolo City');
 INSERT INTO school (SchoolID, SchoolName, SchoolAddress) VALUES (333444, 'Sucat Elementary School', 'Muntinlupa City');
 INSERT INTO school (SchoolID, SchoolName, SchoolAddress) VALUES (567890, 'Basta National High School', 'Basta City');
 INSERT INTO school (SchoolID, SchoolName, SchoolAddress) VALUES (567891, 'University of the Philippines', 'Quezon City');
@@ -175,7 +221,8 @@ INSERT INTO school (SchoolID, SchoolName, SchoolAddress) VALUES (567919, 'San Ju
 INSERT INTO school (SchoolID, SchoolName, SchoolAddress) VALUES (567920, 'Valenzuela High School', 'Valenzuela City');
 
 -- Table: senior
-CREATE TABLE IF NOT EXISTS senior (ReferenceCode INTEGER, Name TEXT NOT NULL, Address TEXT NOT NULL, BirthDate DATE NOT NULL, BirthPlace TEXT NOT NULL, CivilStatus TEXT NOT NULL CHECK (CivilStatus IN ('Single', 'Married', 'Widowed', 'Separated')), SexAtBirth TEXT NOT NULL CHECK (SexAtBirth IN ('Male', 'Female')), BloodType TEXT NOT NULL CHECK (BloodType IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Unknown')), PrimaryContactNum TEXT, ActiveEmailAddress TEXT, Religion TEXT NOT NULL CHECK (Religion IN ('Roman Catholic', 'Islam', 'Iglesia ni Cristo', 'Jehovah''s Witnesses', 'Evangelical', 'Baptist', 'Mormon', 'Buddhist', 'Hindu', 'Others')), SpouseName TEXT, FatherName TEXT NOT NULL, MotherName TEXT NOT NULL, PRIMARY KEY (ReferenceCode AUTOINCREMENT));
+DROP TABLE IF EXISTS senior;
+CREATE TABLE senior (ReferenceCode INTEGER, Name TEXT NOT NULL, Address TEXT NOT NULL, BirthDate DATE NOT NULL, BirthPlace TEXT NOT NULL, CivilStatus TEXT NOT NULL CHECK (CivilStatus IN ('Single', 'Married', 'Widowed', 'Separated')), SexAtBirth TEXT NOT NULL CHECK (SexAtBirth IN ('Male', 'Female')), BloodType TEXT NOT NULL CHECK (BloodType IN ('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Unknown')), PrimaryContactNum TEXT, ActiveEmailAddress TEXT, Religion TEXT NOT NULL CHECK (Religion IN ('Roman Catholic', 'Islam', 'Iglesia ni Cristo', 'Jehovah''s Witnesses', 'Evangelical', 'Baptist', 'Mormon', 'Buddhist', 'Hindu', 'Others')), SpouseName TEXT, FatherName TEXT NOT NULL, MotherName TEXT NOT NULL, PRIMARY KEY (ReferenceCode AUTOINCREMENT));
 INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (1, 'Juan Dela Cruz', 'Antipolo', '1940-05-25', 'Antipolo', 'Married', 'Male', 'A-', '09121234123', 'juandelacruz@gmail.com', 'Roman Catholic', 'Maria Dela Cruz', 'Juanito Dela Cruz', 'Juanita Middle');
 INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (2, 'Princess Sakura Pinaglabanan', 'Muntinlupa City', '1951-03-19', 'Angeles City, Pampanga', 'Widowed', 'Female', 'B+', '09999888765', NULL, 'Iglesia ni Cristo', 'Anton Pinaglabanan', 'King Pinaglabanan', 'Jennifer Delos Reyes');
 INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (3, 'Carlos Santos', 'Quezon City', '1935-11-20', 'Quezon City', 'Married', 'Male', 'O+', '09175551234', 'carlos.santos@gmail.com', 'Evangelical', 'Lucia Santos', 'Pedro Santos', 'Maria Lopez');
@@ -188,6 +235,12 @@ INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilSt
 INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (10, 'Pedro Reyes', 'Pasig City', '1948-09-10', 'Pasig City', 'Single', 'Male', 'O-', '09171112222', 'pedro.reyes@gmail.com', 'Baptist', NULL, 'Miguel Reyes', 'Carmen Diaz');
 INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (11, 'Dolores Cruz', 'Caloocan City', '1952-03-30', 'Caloocan City', 'Married', 'Female', 'AB-', '09172223333', 'dolores.cruz@gmail.com', 'Jehovah''s Witnesses', 'Carlos Cruz', 'Rafael Cruz', 'Maria Santos');
 INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (12, 'Manuel Lopez', 'Makati City', '1945-07-07', 'Makati City', 'Separated', 'Male', 'B-', '09173334444', 'manuel.lopez@gmail.com', 'Islam', NULL, 'Ramon Lopez', 'Teresa Aquino');
+INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (13, 'John Ventura', 'Palawan', '1950-01-08', 'Mindoro', 'Married', 'Male', 'O+', '09566639472', 'johnventura@gmail.com', 'Roman Catholic', 'Jane Ventura', 'Steven Ventura', 'Stephanie Ventura');
+INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (14, 'Maloi Reyes', 'Quezon City', '1945-03-17', 'Quezon City', 'Widowed', 'Female', 'A+', '09237206518', 'binimaloi@gmail.com', 'Baptist', 'Diokno Reyes', 'Nikolas Reyes', 'Arrabella Reyes');
+INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (15, 'Bayani Malaya', 'Zaragoza', '1960-07-30', 'Gapan City', 'Married', 'Male', 'B-', '09247409284', 'bayanifreedom@gmail.com', 'Mormon', 'Selena Malaya', 'Sungtsol Malaya', 'Soolgi Malaya');
+INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (16, 'Diwata Alon', 'Pasay City', '1958-11-28', 'Iloilo City', 'Widowed', 'Female', 'A-', '09448823194', 'diwataoverload@gmail.com', 'Islam', 'Dyelo Alon', 'Chaolong Alon', 'Mamie Alon');
+INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (17, 'Lakan Sining', 'Manila', '1955-04-08', 'Taguig City', 'Single', 'Male', 'O+', '09974583329', 'lakanarts@gmail.com', 'Roman Catholic', NULL, 'Matikas Sining', 'Magdalena Sining');
+INSERT INTO senior (ReferenceCode, Name, Address, BirthDate, BirthPlace, CivilStatus, SexAtBirth, BloodType, PrimaryContactNum, ActiveEmailAddress, Religion, SpouseName, FatherName, MotherName) VALUES (18, 'Shinyu Rivera', 'Taguig CIty', '1963-11-07', 'Ilocos Norte', 'Married', 'Male', 'AB+', '09247110705', 'twsshinyu@gmail.com', 'Roman Catholic', 'Princess Rivera', 'Dohoon Rivera', 'Hanie Delos Santos');
 
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;
