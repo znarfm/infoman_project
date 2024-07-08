@@ -51,7 +51,7 @@ def senior_form():
                     index=None,
                 )
 
-            religion = st.selectbox("Religion*", options=['Roman Catholic', 'Islam', 'Iglesia ni Cristo', 'Jehovah''s Witnesses', 'Evangelical', 'Baptist', 'Mormon', 'Buddhist', 'Hindu', 'Others'], index=None)
+            religion = st.selectbox("Religion*", options=['Roman Catholic', 'Islam', 'Iglesia ni Cristo', 'Jehovah\'s Witnesses', 'Evangelical', 'Baptist', 'Mormon', 'Buddhist', 'Hindu', 'Others'], index=None)
             # troll
             # contact_number = st.slider("Contact Number", min_value=9000000000, max_value=9999999999, step=1)
             col1, col2 = st.columns(2)
