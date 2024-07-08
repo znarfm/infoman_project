@@ -117,7 +117,7 @@ with st.expander(
             ORDER BY NumberOfSeniors DESC;
             """
     df = pd.read_sql_query(query, conn)
-    c1, c2 = st.columns(2)
+    c1, c2 = st.columns(2, vertical_alignment="center")
     c1.dataframe(df, use_container_width=True, hide_index=True)
     fig = px.pie(
         df,
@@ -139,7 +139,7 @@ with st.expander(
             GROUP BY SourceOfIncome;
             """
     df = pd.read_sql_query(query, conn)
-    c1, c2 = st.columns(2)
+    c1, c2 = st.columns(2, vertical_alignment="center")
     c1.dataframe(df, use_container_width=True, hide_index=True)
     c2.bar_chart(df, x="SourceOfIncome", y="TotalIncome", horizontal=True)
     st.code(query, "sql")
@@ -187,7 +187,7 @@ with st.expander(
             ORDER BY TotalIncome DESC;
             """
     df = pd.read_sql_query(query, conn)
-    c1, c2 = st.columns(2)
+    c1, c2 = st.columns(2, vertical_alignment="center")
     c1.dataframe(df, use_container_width=True, hide_index=True)
     c2.bar_chart(df, x="Name", y="TotalIncome", horizontal=True)
     st.code(query, "sql")
@@ -207,7 +207,7 @@ with st.expander(
             GROUP BY S.Name 
             HAVING COUNT(D.DepID) >= 3;"""
     df = pd.read_sql_query(query, conn)
-    c1, c2 = st.columns(2)
+    c1, c2 = st.columns(2, vertical_alignment="center")
     c1.dataframe(df, use_container_width=True, hide_index=True)
     c2.bar_chart(df, x="Name", y="NonWorkingDependents", horizontal=True)
     st.code(query, "sql")
@@ -223,7 +223,7 @@ with st.expander("Count *bloodtype* by **sex and total**.", icon="🩸"):
             GROUP BY BloodType;
             """
     df = pd.read_sql_query(query, conn)
-    c1, c2 = st.columns(2)
+    c1, c2 = st.columns(2, vertical_alignment="center")
     c1.dataframe(df, use_container_width=True, hide_index=True)
     df_melted = df.melt(id_vars=['BloodType'], value_vars=['MaleCount', 'FemaleCount'], 
                     var_name='Gender', value_name='Count')
