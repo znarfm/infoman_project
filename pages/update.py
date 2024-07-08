@@ -192,6 +192,7 @@ match table_selected:
             for index, row in edited_df.iterrows():
                 try:
                     specific_value = df.iloc[index]["DepID"]
+                    row["DepBirthdate"] = row["DepBirthdate"].strftime("%Y-%m-%d")
                     sm.update_record(table, row, specific_value, "DepID")
                     st.success(f"Record {index + 1} updated successfully!")
                 except Exception as e:
