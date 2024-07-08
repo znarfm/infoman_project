@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Mon Jul 8 23:51:29 2024
+-- File generated with SQLiteStudio v3.4.4 on Tue Jul 9 01:25:48 2024
 --
 -- Text encoding used: System
 --
@@ -39,10 +39,10 @@ INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, 
 INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (18, 13, 'Reymark Jovenal', 0, 0, 'None', 0.0, '1984-03-03');
 INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (19, 13, 'Donna Ventura', 1, 0, 'None', 0.0, '1986-04-04');
 INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (20, 14, 'Sheena Reyes', 1, 0, 'None', 0.0, '1978-04-27');
-INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (21, 15, 'Kapitan Malaya', 1, 0, 'Barangay Captain', 25000.0, '1990-05-23');
-INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (22, 15, 'Reyster Mendoza', 0, 0, 'None', 0.0, '2015-12-31');
-INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (23, 16, 'Jesusa Sining', 1, 0, 'Saleslady', 8000.0, '1987-12-25');
-INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (24, 18, 'Kyungmin Rivera', 1, 0, 'Manager', 42000.0, '1988-10-03');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (21, 15, 'Kapitan Malaya', 1, 1, 'Barangay Captain', 25000.0, '1990-05-23');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (22, 15, 'Reyster Mendoza', 0, 1, 'None', 0.0, '2015-12-31');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (23, 16, 'Jesusa Sining', 1, 1, 'Saleslady', 8000.0, '1987-12-25');
+INSERT INTO dependent (DepID, ReferenceCode, DepName, DepIsChild, DepIsWorking, DepOccupation, DepIncome, DepBirthdate) VALUES (24, 18, 'Kyungmin Rivera', 1, 1, 'Manager', 42000.0, '1988-10-03');
 
 -- Table: education
 DROP TABLE IF EXISTS education;
