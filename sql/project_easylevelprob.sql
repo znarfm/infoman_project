@@ -6,11 +6,10 @@ SELECT *
 FROM senior
 WHERE BirthPlace NOT LIKE 'Manila' AND BirthPlace NOT LIKE 'Taguig';
 
--- Problem 2: Count the SCs suffering from each illness(concerndetails)
-SELECT ConcernType, ConcernDetails, COUNT(*) AS NumberOfSeniors
-FROM healthconcern
-GROUP BY ConcernType, ConcernDetails
-ORDER BY NumberOfSeniors DESC;
+-- Problem 2: List dependents under 18 years of age.
+SELECT DepID, ReferenceCode, DepName, DepBirthdate, DATEDIFF(CURDATE(), DepBirthdate) / 365 AS Age
+FROM dependent
+WHERE DATEDIFF(CURDATE(), DepBirthdate) / 365 < 18;
 
 -- Problem 3: Compute SC's age (considering leap years)
 SELECT ReferenceCode, Name, Birthdate, FLOOR(DATEDIFF(CURDATE(), Birthdate) / 365.25) AS Age

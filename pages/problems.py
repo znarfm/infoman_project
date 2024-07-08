@@ -15,7 +15,7 @@ st.header("National Commission of Senior Citizens", divider="rainbow", anchor=Fa
 
 st.markdown("## SQL Problems")
 st.markdown("### :green-background[Simple Problems]")
-with st.expander("Display all records of SCs not born in Manila City and Taguig City."):
+with st.expander("Display all records of SCs **not** born in Manila City and Taguig City.", icon="📍"):
     query = """
             SELECT *
             FROM senior
@@ -28,49 +28,7 @@ with st.expander("Display all records of SCs not born in Manila City and Taguig 
     )
     st.code(query, "sql")
 
-with st.expander("Count the SCs suffering from each illness(concernedetails)."):
-    query = """
-            SELECT 
-                ConcernType, 
-                ConcernDetails, 
-                COUNT(*) AS NumberOfSeniors 
-            FROM healthconcern 
-            GROUP BY ConcernType, ConcernDetails 
-            ORDER BY NumberOfSeniors DESC;
-            """
-    st.dataframe(
-        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
-    )
-    st.code(query, "sql")
-
-with st.expander("Compute SC's age (considering leap years)."):
-    query = """
-            SELECT 
-                ReferenceCode, 
-                Name, 
-                Birthdate, 
-            CAST((julianday('now') - julianday(Birthdate)) / 365.25 AS INTEGER) AS Age 
-            FROM senior;
-            """
-    original =  """
-                SELECT 
-                    ReferenceCode, 
-                    Name, 
-                    Birthdate, 
-                    FLOOR(DATEDIFF(CURDATE(), Birthdate) / 365.25) AS Age 
-                FROM senior;
-                """
-    st.dataframe(
-        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
-    )
-    st.write("SQLite:")
-    st.code(query, "sql")
-    st.write("Original query:")
-    st.code(original, "sql")
-
-
-st.markdown("### :orange-background[Moderate Problems]")
-with st.expander("List dependents under 18 years of age."):
+with st.expander("List dependents **under 18 years of age**.", icon=":material/18_up_rating:"):
     query = """
             SELECT 
                 DepID, 
@@ -99,7 +57,49 @@ with st.expander("List dependents under 18 years of age."):
     st.write("Original query:")
     st.code(original, "sql")
 
-with st.expander("Display the maximum number of SCs with each civil status."):
+with st.expander("Compute SC's age (considering leap years).", icon="📅"):
+    query = """
+            SELECT 
+                ReferenceCode, 
+                Name, 
+                Birthdate, 
+            CAST((julianday('now') - julianday(Birthdate)) / 365.25 AS INTEGER) AS Age 
+            FROM senior;
+            """
+    original =  """
+                SELECT 
+                    ReferenceCode, 
+                    Name, 
+                    Birthdate, 
+                    FLOOR(DATEDIFF(CURDATE(), Birthdate) / 365.25) AS Age 
+                FROM senior;
+                """
+    st.dataframe(
+        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
+    )
+    st.write("SQLite:")
+    st.code(query, "sql")
+    st.write("Original query:")
+    st.code(original, "sql")
+
+
+st.markdown("### :orange-background[Moderate Problems]")
+with st.expander("Count the SCs suffering from *each illness* (concernedetails).", icon="😷"):
+    query = """
+            SELECT 
+                ConcernType, 
+                ConcernDetails, 
+                COUNT(*) AS NumberOfSeniors 
+            FROM healthconcern 
+            GROUP BY ConcernType, ConcernDetails 
+            ORDER BY NumberOfSeniors DESC;
+            """
+    st.dataframe(
+        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
+    )
+    st.code(query, "sql")
+
+with st.expander("Display the *maximum number* of SCs with **each civil status**.", icon=":material/diversity_2:"):
     query = """
             SELECT 
                 CivilStatus, 
@@ -113,7 +113,7 @@ with st.expander("Display the maximum number of SCs with each civil status."):
     )
     st.code(query, "sql")
 
-with st.expander("Calculate the total income for each source type earned by SCs."):
+with st.expander("Calculate the **total income for each source type** earned by SCs.", icon="💰"):
     query = """
             SELECT 
                 SourceOfIncome, 
@@ -126,7 +126,7 @@ with st.expander("Calculate the total income for each source type earned by SCs.
     )
     st.code(query, "sql")
 
-with st.expander("List SCs who have no spouse."):
+with st.expander("List all SCs who have *no spouse*, but **has someone dependent** to them.", icon="👨‍👩‍👦"):
     query = """
             SELECT 
                 S.ReferenceCode, 
@@ -150,7 +150,8 @@ with st.expander("List SCs who have no spouse."):
 
 st.markdown("### :red-background[Difficult Problems]")
 with st.expander(
-    "List seniors who have a total monthly income of more than Php 100,000 from all their income sources."
+    "List seniors who have a *total monthly income of more than Php 100,000* from **all their income sources**.",
+    icon="💸"
 ):
     query = """
             SELECT 
@@ -170,7 +171,7 @@ with st.expander(
     st.code(query, "sql")
 
 with st.expander(
-    "List the names of SCs and the total number of dependents who are not working, where the senior has more than three such dependents."
+    "List the names of SCs and the *total number of dependents who are not working*, where the senior has **more than three such dependents**.", icon="⚒️"
 ):
     query = """
             SELECT 
@@ -187,7 +188,7 @@ with st.expander(
     )
     st.code(query, "sql")
 
-with st.expander("Count bloodtype by sex and total."):
+with st.expander("Count *bloodtype* by **sex and total**.", icon="🩸"):
     query = """
             SELECT 
                 BloodType, 
