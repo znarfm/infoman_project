@@ -25,9 +25,7 @@ with c1:
     st.markdown("##### [Meinard Adrian Francisco](https://github.com/znarfm)")
 with c2:
     st.image("./images/bryll.jpg")
-    st.write(
-        "##### [Prince Bryll Soliven](https://github.com/pieberson)"
-    )
+    st.write("##### [Prince Bryll Soliven](https://github.com/pieberson)")
 with c3:
     st.image("./images/knight.png")
     st.write("##### [Jedric Knight Vicente](https://github.com/HalluciKnight)")
