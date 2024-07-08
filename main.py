@@ -16,6 +16,7 @@ st.sidebar.header(
     "National Commission of Senior Citizens", divider="rainbow", anchor=False
 )
 
+st.sidebar.page_link("pages/form.py", label="Registration Form", icon="📝")
 
 table_name_mapping = {
     "Senior": "senior",
@@ -112,18 +113,25 @@ def view_tables():
             )
             st.session_state.table_pk = selected_row_df.iloc[0].values[0]
 
+    # Navigation
     st.sidebar.divider()
     st.sidebar.markdown("### Operations")
+    st.sidebar.page_link(
+        "pages/add.py",
+        label="Create record on existing senior",
+        icon="➕",
+    )
     if selected_table == "Senior":
-        st.sidebar.page_link("pages/add.py", label="Create new record", icon="📝")
         st.sidebar.page_link(
             "pages/read.py",
             label="Read selected record",
             icon="🔎",
             disabled=selected_row_df.empty,
         )
-    if selected_table == "School":
-        st.sidebar.page_link("pages/add_school.py", label="Add new school", icon="🏫")
+    elif selected_table == "School":
+        st.sidebar.page_link(
+            "pages/add_school.py", label="Add new school", icon="🏫"
+        )
     st.sidebar.page_link(
         "pages/update.py",
         label="Update selected record",
