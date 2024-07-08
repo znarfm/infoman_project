@@ -1,6 +1,7 @@
 import streamlit as st
 import sql_manager as sm
 import pandas as pd
+from streamlit_extras.bottom_container import bottom
 import datetime
 
 st.set_page_config(
@@ -108,7 +109,8 @@ def view_tables():
     st.sidebar.divider()
     st.sidebar.page_link("pages/about.py", label="About", icon="❓")
     
-    st.sidebar.info("This website is intended solely for academic purposes.", icon="📙")
+    with bottom():
+        st.info("This website is intended solely for academic purposes.", icon="📙")
 
 view_tables()
 
