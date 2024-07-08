@@ -2,6 +2,7 @@ import streamlit as st
 import datetime
 import pandas as pd
 import sql_manager as sm
+import re
 
 st.set_page_config(
     page_title="NCSC Form",
@@ -21,8 +22,8 @@ def senior_form():
         st.info("All fields marked with * are required.", icon="ℹ️")
 
         with st.expander("Personal Information", expanded=True, icon="📒"):
-            name = st.text_input("Full Name*")
-            address = st.text_input("Address*")
+            name = st.text_input("Full Name*").strip()
+            address = st.text_input("Address*").strip()
 
             col1, col2 = st.columns(2)
             with col1:
@@ -35,7 +36,7 @@ def senior_form():
                     - datetime.timedelta(days=60 * 365.25),
                 )
             with col2:
-                birthplace = st.text_input("Birthplace*")
+                birthplace = st.text_input("Birthplace*").strip()
 
             col1, col2, col3 = st.columns(3)
             with col1:
@@ -56,11 +57,11 @@ def senior_form():
             # contact_number = st.slider("Contact Number", min_value=9000000000, max_value=9999999999, step=1)
             col1, col2 = st.columns(2)
             with col1:
-                contact_number = st.text_input("Contact Number")
-                father = st.text_input("Father's Name*")
+                contact_number = st.text_input("Contact Number").strip()
+                father = st.text_input("Father's Name*").strip()
             with col2:
-                email = st.text_input("Email Address")
-                mother = st.text_input("Mother's Name*")
+                email = st.text_input("Email Address").strip()
+                mother = st.text_input("Mother's Name*").strip()
 
             spouse = st.text_input("Spouse Name")
 
@@ -158,11 +159,11 @@ def senior_form():
                     "Sex": sex,
                     "Blood Type": blood_type,
                     "Religion": religion,
-                    "Contact Number": contact_number,
-                    "Email": email,
+                    "Contact Number": None if contact_number == "" else contact_number,
+                    "Email": None if email == "" else email,
                     "Father": father,
                     "Mother": mother,
-                    "Spouse": spouse
+                    "Spouse": None if spouse == "" else spouse
                     },
                 "Dependents": dependent_df.to_dict(orient="records"),
                 "Income": income_df.to_dict(orient="records"),
