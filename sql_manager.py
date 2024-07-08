@@ -141,6 +141,11 @@ def update_senior(table_name, df, reference_code, pk):
         
         # Iterate over each row in the DataFrame and update the corresponding record
         for index, row in df.iterrows():
+            for key, value in row.items():
+                if value == "":
+                    row[key] = None
+                if isinstance(value, pd.Timestamp):
+                    row[key] = value.strftime("%Y-%m-%d")
             values = row.tolist() + [reference_code]
             cursor.execute(update_query, values)
 
@@ -154,6 +159,8 @@ def update_record(table_name, row, df_id, pk):
         df_id = str(df_id)
 
         for key, value in row.items():
+            if value == "":
+                row[key] = None
             if isinstance(value, pd.Timestamp):
                 row[key] = value.strftime("%Y-%m-%d")
         

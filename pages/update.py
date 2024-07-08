@@ -23,9 +23,45 @@ match table_selected:
             f"SELECT * FROM {table_selected} WHERE referencecode = {st.session_state.referencecode};",
             conn,
         )
+        df["BirthDate"] = pd.to_datetime(df["BirthDate"], errors="coerce")
         df_to_edit = df.drop(columns=["ReferenceCode"])
         edited_df = st.data_editor(
-            df_to_edit, hide_index=True, use_container_width=True
+            df_to_edit,
+            hide_index=True,
+            use_container_width=True,
+            column_config={
+                "BirthDate": st.column_config.DateColumn(
+                    format="YYYY-MM-DD",
+                    min_value=datetime.date(1900, 1, 1),
+                    max_value=datetime.date.today()
+                    - datetime.timedelta(days=60 * 365.25),
+                    required=True,
+                ),
+                "CivilStatus": st.column_config.SelectboxColumn(
+                    options=["Single", "Married", "Separated", "Widowed"],
+                    required=True,
+                ),
+                "SexAtBirth": st.column_config.SelectboxColumn(
+                    options=["Male", "Female"], required=True
+                ),
+                "BloodType": st.column_config.SelectboxColumn(
+                    options=["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "Unknown"], required=True),
+                "Religion": st.column_config.SelectboxColumn(
+                    options=[
+                        "Roman Catholic",
+                        "Islam",
+                        "Iglesia ni Cristo",
+                        "Jehovah's Witnesses",
+                        "Evangelical",
+                        "Baptist",
+                        "Mormon",
+                        "Buddhist",
+                        "Hindu",
+                        "Others",
+                    ],
+                    required=True,
+                ),
+            },
         )
         upd_btn = st.button("UPDATE")
         if upd_btn:
