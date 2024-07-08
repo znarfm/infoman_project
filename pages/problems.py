@@ -129,19 +129,37 @@ with st.expander(
     st.code(query, "sql")
 
 with st.expander(
-    "Calculate the **total income for each source type** earned by SCs.", icon="💰"
+    "Calculate the **total income for each source type** earned by SCs. Display also the minimum and maximum monthly income of the SCs.",
+    icon="💰",
 ):
     query = """
             SELECT 
                 SourceOfIncome, 
-                SUM(MonthlyIncome) AS TotalIncome
+                SUM(MonthlyIncome) AS TotalIncome, 
+                MAX(MonthlyIncome) AS MaxMonthlyIncome, 
+                MIN(MonthlyIncome) AS MinMonthlyIncome
             FROM income
             GROUP BY SourceOfIncome;
             """
     df = pd.read_sql_query(query, conn)
     c1, c2 = st.columns(2, vertical_alignment="center")
     c1.dataframe(df, use_container_width=True, hide_index=True)
-    c2.bar_chart(df, x="SourceOfIncome", y="TotalIncome", horizontal=True)
+    df_melted = df.melt(
+        id_vars=["SourceOfIncome"],
+        value_vars=["TotalIncome", "MaxMonthlyIncome", "MinMonthlyIncome"],
+        var_name="IncomeType",
+        value_name="Income",
+    )
+    fig = px.bar(
+        df_melted,
+        x="SourceOfIncome",
+        y="Income",
+        color="IncomeType",
+        barmode="group",
+        title="Income Distribution by Source of Income",
+    )
+    c2.plotly_chart(fig)
+    # c2.bar_chart(df, x="SourceOfIncome", y="TotalIncome", horizontal=True)
     st.code(query, "sql")
 
 with st.expander(
