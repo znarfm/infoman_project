@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import sql_manager as sm
+import plotly.express as px
 
 st.set_page_config(
     page_title="SQL Problems",
@@ -15,7 +16,9 @@ st.header("National Commission of Senior Citizens", divider="rainbow", anchor=Fa
 
 st.markdown("## SQL Problems")
 st.markdown("### :green-background[Simple Problems]")
-with st.expander("Display all records of SCs **not** born in Manila City and Taguig City.", icon="📍"):
+with st.expander(
+    "Display all records of SCs **not** born in Manila City and Taguig City.", icon="📍"
+):
     query = """
             SELECT *
             FROM senior
@@ -23,12 +26,13 @@ with st.expander("Display all records of SCs **not** born in Manila City and Tag
                 BirthPlace NOT LIKE '%Manila%' 
                 AND BirthPlace NOT LIKE '%Taguig%';
             """
-    st.dataframe(
-        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
-    )
+    df = pd.read_sql_query(query, conn)
+    st.dataframe(df, use_container_width=True, hide_index=True)
     st.code(query, "sql")
 
-with st.expander("List dependents **under 18 years of age**.", icon=":material/18_up_rating:"):
+with st.expander(
+    "List dependents **under 18 years of age**.", icon=":material/18_up_rating:"
+):
     query = """
             SELECT 
                 DepID, 
@@ -39,7 +43,7 @@ with st.expander("List dependents **under 18 years of age**.", icon=":material/1
             FROM dependent
             WHERE Age < 18;
             """
-    original =  """
+    original = """
                 SELECT 
                     DepID,
                     ReferenceCode,
@@ -66,7 +70,7 @@ with st.expander("Compute SC's age (considering leap years).", icon="📅"):
             CAST((julianday('now') - julianday(Birthdate)) / 365.25 AS INTEGER) AS Age 
             FROM senior;
             """
-    original =  """
+    original = """
                 SELECT 
                     ReferenceCode, 
                     Name, 
@@ -84,7 +88,9 @@ with st.expander("Compute SC's age (considering leap years).", icon="📅"):
 
 
 st.markdown("### :orange-background[Moderate Problems]")
-with st.expander("Count the SCs suffering from *each illness* (concernedetails).", icon="😷"):
+with st.expander(
+    "Count the SCs suffering from *each illness* (concernedetails).", icon="😷"
+):
     query = """
             SELECT 
                 ConcernType, 
@@ -94,12 +100,14 @@ with st.expander("Count the SCs suffering from *each illness* (concernedetails).
             GROUP BY ConcernType, ConcernDetails 
             ORDER BY NumberOfSeniors DESC;
             """
-    st.dataframe(
-        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
-    )
+    df = pd.read_sql_query(query, conn)
+    st.dataframe(df, use_container_width=True, hide_index=True)
     st.code(query, "sql")
 
-with st.expander("Display the *maximum number* of SCs with **each civil status**.", icon=":material/diversity_2:"):
+with st.expander(
+    "Display the *maximum number* of SCs with **each civil status**.",
+    icon=":material/diversity_2:",
+):
     query = """
             SELECT 
                 CivilStatus, 
@@ -108,12 +116,21 @@ with st.expander("Display the *maximum number* of SCs with **each civil status**
             GROUP BY CivilStatus
             ORDER BY NumberOfSeniors DESC;
             """
-    st.dataframe(
-        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
+    df = pd.read_sql_query(query, conn)
+    c1, c2 = st.columns(2)
+    c1.dataframe(df, use_container_width=True, hide_index=True)
+    fig = px.pie(
+        df,
+        values="NumberOfSeniors",
+        names="CivilStatus",
+        title="Number of Seniors by Civil Status",
     )
+    c2.plotly_chart(fig)
     st.code(query, "sql")
 
-with st.expander("Calculate the **total income for each source type** earned by SCs.", icon="💰"):
+with st.expander(
+    "Calculate the **total income for each source type** earned by SCs.", icon="💰"
+):
     query = """
             SELECT 
                 SourceOfIncome, 
@@ -121,12 +138,16 @@ with st.expander("Calculate the **total income for each source type** earned by 
             FROM income
             GROUP BY SourceOfIncome;
             """
-    st.dataframe(
-        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
-    )
+    df = pd.read_sql_query(query, conn)
+    c1, c2 = st.columns(2)
+    c1.dataframe(df, use_container_width=True, hide_index=True)
+    c2.bar_chart(df, x="SourceOfIncome", y="TotalIncome", horizontal=True)
     st.code(query, "sql")
 
-with st.expander("List all SCs who have *no spouse*, but **has someone dependent** to them.", icon="👨‍👩‍👦"):
+with st.expander(
+    "List all SCs who have *no spouse*, but **has someone dependent** to them.",
+    icon="👨‍👩‍👦",
+):
     query = """
             SELECT 
                 S.ReferenceCode, 
@@ -151,7 +172,7 @@ with st.expander("List all SCs who have *no spouse*, but **has someone dependent
 st.markdown("### :red-background[Difficult Problems]")
 with st.expander(
     "List seniors who have a *total monthly income of more than Php 100,000* from **all their income sources**.",
-    icon="💸"
+    icon="💸",
 ):
     query = """
             SELECT 
@@ -165,13 +186,15 @@ with st.expander(
             HAVING SUM(MonthlyIncome) > 100000 
             ORDER BY TotalIncome DESC;
             """
-    st.dataframe(
-        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
-    )
+    df = pd.read_sql_query(query, conn)
+    c1, c2 = st.columns(2)
+    c1.dataframe(df, use_container_width=True, hide_index=True)
+    c2.bar_chart(df, x="Name", y="TotalIncome", horizontal=True)
     st.code(query, "sql")
 
 with st.expander(
-    "List the names of SCs and the *total number of dependents who are not working*, where the senior has **more than three such dependents**.", icon="⚒️"
+    "List the names of SCs and the *total number of dependents who are not working*, where the senior has **more than two such dependents**.",
+    icon="⚒️",
 ):
     query = """
             SELECT 
@@ -182,10 +205,11 @@ with st.expander(
                 S.ReferenceCode = D.ReferenceCode
                 AND D.DepIsWorking = 0 
             GROUP BY S.Name 
-            HAVING COUNT(D.DepID) > 3;"""
-    st.dataframe(
-        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
-    )
+            HAVING COUNT(D.DepID) >= 3;"""
+    df = pd.read_sql_query(query, conn)
+    c1, c2 = st.columns(2)
+    c1.dataframe(df, use_container_width=True, hide_index=True)
+    c2.bar_chart(df, x="Name", y="NonWorkingDependents", horizontal=True)
     st.code(query, "sql")
 
 with st.expander("Count *bloodtype* by **sex and total**.", icon="🩸"):
@@ -198,7 +222,12 @@ with st.expander("Count *bloodtype* by **sex and total**.", icon="🩸"):
             FROM senior 
             GROUP BY BloodType;
             """
-    st.dataframe(
-        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
-    )
+    df = pd.read_sql_query(query, conn)
+    c1, c2 = st.columns(2)
+    c1.dataframe(df, use_container_width=True, hide_index=True)
+    df_melted = df.melt(id_vars=['BloodType'], value_vars=['MaleCount', 'FemaleCount'], 
+                    var_name='Gender', value_name='Count')
+    fig = px.bar(df_melted, x='BloodType', y='Count', color='Gender', 
+                title='Blood Type Distribution by Gender', orientation='h')
+    c2.plotly_chart(fig)
     st.code(query, "sql")
