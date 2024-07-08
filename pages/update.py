@@ -168,21 +168,23 @@ match table_selected:
         df["DepBirthdate"] = pd.to_datetime(df["DepBirthdate"], errors="coerce")
         df_to_edit = df.drop(columns=["DepID", "ReferenceCode"])
         edited_df = st.data_editor(
-                data=df_to_edit,
-                column_config={
-                    "DepName": st.column_config.TextColumn(required=True),
-                    "DepIsChild": st.column_config.CheckboxColumn(required=True),
-                    "DepIsWorking": st.column_config.CheckboxColumn(required=True),
-                    "DepOccupation": st.column_config.TextColumn("Occupation"),
-                    "DepIncome": st.column_config.NumberColumn("Income", min_value=0),
-                    "DepBirthdate": st.column_config.DateColumn(format="YYYY-MM-DD",
-                                                            min_value=datetime.date(1900, 1, 1),
-                                                            max_value=datetime.date.today(),
-                                                            required=True),
-                },
-                use_container_width=True,
-                hide_index=True,
-            )
+            data=df_to_edit,
+            column_config={
+                "DepName": st.column_config.TextColumn(required=True),
+                "DepIsChild": st.column_config.CheckboxColumn(required=True),
+                "DepIsWorking": st.column_config.CheckboxColumn(required=True),
+                "DepOccupation": st.column_config.TextColumn("Occupation"),
+                "DepIncome": st.column_config.NumberColumn("Income", min_value=0),
+                "DepBirthdate": st.column_config.DateColumn(
+                    format="YYYY-MM-DD",
+                    min_value=datetime.date(1900, 1, 1),
+                    max_value=datetime.date.today(),
+                    required=True,
+                ),
+            },
+            use_container_width=True,
+            hide_index=True,
+        )
         upd_btn = st.button("UPDATE")
         if upd_btn:
             table = st.session_state.selected_table.lower()
@@ -203,10 +205,13 @@ match table_selected:
         )
         df_to_edit = df.drop(columns=["SchoolID"])
         edited_df = st.data_editor(
-            df_to_edit, hide_index=True, use_container_width=True, column_config={
+            df_to_edit,
+            hide_index=True,
+            use_container_width=True,
+            column_config={
                 "SchoolName": st.column_config.TextColumn(required=True),
                 "SchoolAddress": st.column_config.TextColumn(required=True),
-            }
+            },
         )
         upd_btn = st.button("UPDATE")
         if upd_btn:
