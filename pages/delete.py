@@ -13,8 +13,6 @@ st.logo(image="./images/NCSC.png")
 st.page_link("main.py", label="Back", icon="🔙")
 st.header("National Commission of Senior Citizens", divider="rainbow", anchor=False)
 
-st.warning("Section needs testing.", icon="🧪")
-
 # st.write(st.session_state.table_pk)
 # st.write(st.session_state.referencecode)
 

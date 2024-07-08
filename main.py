@@ -2,7 +2,6 @@ import streamlit as st
 import sql_manager as sm
 import pandas as pd
 from streamlit_extras.bottom_container import bottom
-import datetime
 
 st.set_page_config(
     page_title="National Commission of Senior Citizens",
@@ -24,8 +23,6 @@ table_name_mapping = {
     "Dependent": "dependent",
     "School": "school",
 }
-
-st.sidebar.warning("Application is still under development.", icon="⚠️")
 
 def view_tables():
     # Select a specific table
@@ -85,15 +82,15 @@ def view_tables():
                     column_config=colconfig
                     )
         
-        st.markdown("### Selected Record")
+        # st.markdown("### Selected Record")
         sel = event.selection.rows
         selected_row_df = df.iloc[sel]
         if not selected_row_df.empty:
             # For debugging
-            st.dataframe(selected_row_df, 
-                    use_container_width=True, 
-                    hide_index=True,
-                    )
+            # st.dataframe(selected_row_df, 
+            #         use_container_width=True, 
+            #         hide_index=True,
+            #         )
             st.session_state.referencecode = selected_row_df["ReferenceCode"].values[0] if selected_table != "School" else selected_row_df["SchoolID"].values[0]
             st.session_state.table_pk = selected_row_df.iloc[0].values[0]
 
@@ -114,4 +111,3 @@ def view_tables():
         st.info("This website is intended solely for academic purposes.", icon="📙")
 
 view_tables()
-

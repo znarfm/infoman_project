@@ -14,7 +14,6 @@ conn = sm.make_connection()
 st.logo(image="./images/NCSC.png")
 st.page_link("main.py", label="Back", icon="🔙")
 st.header("National Commission of Senior Citizens", divider="rainbow", anchor=False)
-st.warning("Section needs testing.", icon="🧪")
 
 def senior_form():
     with st.form("senior_form"):

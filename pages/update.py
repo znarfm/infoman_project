@@ -9,8 +9,6 @@ st.set_page_config(
     layout="wide",
 )
 
-st.warning("Section needs testing.", icon="🧪")
-
 conn = sm.make_connection()
 st.logo(image="./images/NCSC.png")
 st.page_link("main.py", label="Back", icon="🔙")
@@ -32,6 +30,7 @@ if table_selected == "Senior":
             st.success("Record updated successfully!")
         except Exception as e:
             st.error(f"Error updating record: {e}")
+
 elif table_selected == "Education":
     st.markdown(f"### {table_selected} Table")
     df = pd.read_sql_query(f"SELECT * FROM {table_selected} WHERE referencecode = {st.session_state.referencecode};", conn)
@@ -49,6 +48,7 @@ elif table_selected == "Education":
                 st.success(f"Record {index + 1} updated successfully!")
             except Exception as e:
                 st.error(f"Error updating record {index}: {e}")
+
 elif table_selected == "Health Concern":
     st.markdown(f"### {table_selected} Table")
     df = pd.read_sql_query(f"SELECT * FROM healthconcern WHERE referencecode = {st.session_state.referencecode};", conn)
@@ -66,6 +66,7 @@ elif table_selected == "Health Concern":
                 st.success(f"Record {index + 1} updated successfully!")
             except Exception as e:
                 st.error(f"Error updating record {index}: {e}")
+
 elif table_selected == "Income":
     st.markdown(f"### {table_selected} Table")
     df = pd.read_sql_query(f"SELECT * FROM {table_selected} WHERE referencecode = {st.session_state.referencecode};", conn)
@@ -83,6 +84,7 @@ elif table_selected == "Income":
                 st.success(f"Record {index + 1} updated successfully!")
             except Exception as e:
                 st.error(f"Error updating record {index}: {e}")
+
 elif table_selected == "Dependent":
     st.markdown(f"### {table_selected} Table")
     df = pd.read_sql_query(f"SELECT * FROM {table_selected} WHERE referencecode = {st.session_state.referencecode};", conn)
@@ -100,6 +102,7 @@ elif table_selected == "Dependent":
                 st.success(f"Record {index + 1} updated successfully!")
             except Exception as e:
                 st.error(f"Error updating record {index}: {e}")
+                
 elif table_selected == "School":
     st.markdown(f"### {table_selected} Table")
     df = pd.read_sql_query(f"SELECT * FROM {table_selected} WHERE SchoolID = {st.session_state.referencecode};", conn)
