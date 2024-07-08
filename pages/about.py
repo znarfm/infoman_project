@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_extras.bottom_container import bottom
 
 st.set_page_config(
     page_title="About project",
@@ -30,4 +31,5 @@ st.markdown("### Links")
 st.page_link(page="https://github.com/znarfm/infoman_project", label="GitHub Repository", icon="👨‍💻")
 st.page_link(page="https://www.ncsc.gov.ph/", label="Official NCSC Website", icon="🌐")
 
-st.warning("This website is an independent project and is not affiliated with [NCSC](https://www.ncsc.gov.ph/). It is intended solely for academic purposes.", icon="⚠️")
+with bottom():
+    st.warning("This website is an independent project and is not affiliated with [NCSC](https://www.ncsc.gov.ph/). It is intended solely for academic purposes.", icon="⚠️")
