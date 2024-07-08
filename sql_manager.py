@@ -1,5 +1,4 @@
 import sqlite3
-import pandas as pd
 
 def make_connection():
     return sqlite3.connect("projectdb.db")
