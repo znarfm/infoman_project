@@ -26,6 +26,7 @@ with st.expander("Display all records of SCs not born in Manila City and Taguig 
     st.dataframe(
         pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
     )
+    st.code(query, "sql")
 
 with st.expander("Count the SCs suffering from each illness(concernedetails)."):
     query = """
@@ -40,6 +41,7 @@ with st.expander("Count the SCs suffering from each illness(concernedetails)."):
     st.dataframe(
         pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
     )
+    st.code(query, "sql")
 
 with st.expander("Compute SC's age (considering leap years)."):
     query = """
@@ -61,6 +63,10 @@ with st.expander("Compute SC's age (considering leap years)."):
     st.dataframe(
         pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
     )
+    st.write("SQLite:")
+    st.code(query, "sql")
+    st.write("Original query:")
+    st.code(original, "sql")
 
 
 st.markdown("### :orange-background[Moderate Problems]")
@@ -88,6 +94,10 @@ with st.expander("List dependents under 18 years of age."):
     st.dataframe(
         pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
     )
+    st.write("SQLite:")
+    st.code(query, "sql")
+    st.write("Original query:")
+    st.code(original, "sql")
 
 with st.expander("Display the maximum number of SCs with each civil status."):
     query = """
@@ -101,6 +111,7 @@ with st.expander("Display the maximum number of SCs with each civil status."):
     st.dataframe(
         pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
     )
+    st.code(query, "sql")
 
 with st.expander("Calculate the total income for each source type earned by SCs."):
     query = """
@@ -113,6 +124,7 @@ with st.expander("Calculate the total income for each source type earned by SCs.
     st.dataframe(
         pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
     )
+    st.code(query, "sql")
 
 with st.expander("List SCs who have no spouse."):
     query = """
@@ -126,15 +138,15 @@ with st.expander("List SCs who have no spouse."):
                     FROM dependent AS D 
                     WHERE D.ReferenceCode = S.ReferenceCode
                 ) 
-            AND (
-                S.SpouseName IS NULL 
-                OR S.SpouseName = ''
-            );
+                AND (
+                    S.SpouseName IS NULL 
+                    OR S.SpouseName = ''
+                );
             """
     st.dataframe(
         pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
     )
-
+    st.code(query, "sql")
 
 st.markdown("### :red-background[Difficult Problems]")
 with st.expander(
@@ -155,6 +167,7 @@ with st.expander(
     st.dataframe(
         pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
     )
+    st.code(query, "sql")
 
 with st.expander(
     "List the names of SCs and the total number of dependents who are not working, where the senior has more than three such dependents."
@@ -172,6 +185,7 @@ with st.expander(
     st.dataframe(
         pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
     )
+    st.code(query, "sql")
 
 with st.expander("Count bloodtype by sex and total."):
     query = """
@@ -186,3 +200,4 @@ with st.expander("Count bloodtype by sex and total."):
     st.dataframe(
         pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
     )
+    st.code(query, "sql")
