@@ -190,7 +190,59 @@ def insert_school(school_data):
         return True
 
 # UPDATE statements
-# TODO
+def update_senior(table_name, df, reference_code, pk):
+    with make_connection() as conn:
+        cursor = conn.cursor()
+        
+        # Fetch column names from DataFrame
+        columns = df.columns.tolist()
+        reference_code = str(reference_code)
+        
+        # Create the SET clause for the SQL UPDATE query
+        set_clause = ", ".join([f"{col} = ?" for col in columns])
+        
+        # Construct the SQL UPDATE query
+        update_query = f"""
+        UPDATE {table_name}
+        SET {set_clause}
+        WHERE {pk} = ?;
+        """
+        
+        # Iterate over each row in the DataFrame and update the corresponding record
+        for index, row in df.iterrows():
+            values = row.tolist() + [reference_code]
+            cursor.execute(update_query, values)
+
+        conn.commit()
+        
+def update_record(table_name, row, df_id, pk):
+    with make_connection() as conn:
+        cursor = conn.cursor()
+
+        columns = row.index.tolist()
+        df_id = str(df_id)
+        
+        # Create the SET clause for the SQL UPDATE query
+        set_clause = ", ".join([f"{col} = ?" for col in columns])
+
+        # Construct the SQL UPDATE query
+        update_query = f"""
+        UPDATE {table_name}
+        SET {set_clause}
+        WHERE {pk} = ?;
+        """
+
+        # Prepare the values to be updated
+        values = row[columns].tolist() + [df_id]
+        
+        print("Update query:", update_query)
+        print("Values to be updated:", values)
+        
+        # Execute the update query
+        cursor.execute(update_query, values)
+        
+        # Commit the transaction
+        conn.commit()
 
 # DELETE statements
 def delete_senior(reference_code):
