@@ -89,7 +89,7 @@ with st.expander("Compute SC's age (considering leap years).", icon="📅"):
 
 st.markdown("### :orange-background[Moderate Problems]")
 with st.expander(
-    "Count the SCs suffering from *each illness* (concernedetails).", icon="😷"
+    "Count the SCs suffering from *each illness* (ConcernDetails).", icon="😷"
 ):
     query = """
             SELECT 
@@ -105,7 +105,7 @@ with st.expander(
     st.code(query, "sql")
 
 with st.expander(
-    "Display the *maximum number* of SCs with **each civil status**.",
+    "Display the *total number* of SCs with **each civil status**.",
     icon=":material/diversity_2:",
 ):
     query = """
