@@ -162,29 +162,34 @@ with st.expander(
     # c2.bar_chart(df, x="SourceOfIncome", y="TotalIncome", horizontal=True)
     st.code(query, "sql")
 
-with st.expander(
-    "List all SCs who have *no spouse*, but **has someone dependent** to them.",
-    icon="👨‍👩‍👦",
-):
+with st.expander("Count *bloodtype* by **sex and total**.", icon="🩸"):
     query = """
             SELECT 
-                S.ReferenceCode, 
-                S.Name 
-            FROM senior AS S 
-            WHERE 
-                S.ReferenceCode IN (
-                    SELECT DISTINCT D.ReferenceCode 
-                    FROM dependent AS D 
-                    WHERE D.ReferenceCode = S.ReferenceCode
-                ) 
-                AND (
-                    S.SpouseName IS NULL 
-                    OR S.SpouseName = ''
-                );
+                BloodType, 
+                COUNT(CASE WHEN SexAtBirth = 'Male' THEN 1 END) AS MaleCount, 
+                COUNT(CASE WHEN SexAtBirth = 'Female' THEN 1 END) AS FemaleCount, 
+                COUNT(*) AS TotalCount 
+            FROM senior 
+            GROUP BY BloodType;
             """
-    st.dataframe(
-        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
+    df = pd.read_sql_query(query, conn)
+    c1, c2 = st.columns(2, vertical_alignment="center")
+    c1.dataframe(df, use_container_width=True, hide_index=True)
+    df_melted = df.melt(
+        id_vars=["BloodType"],
+        value_vars=["MaleCount", "FemaleCount"],
+        var_name="Gender",
+        value_name="Count",
     )
+    fig = px.bar(
+        df_melted,
+        x="BloodType",
+        y="Count",
+        color="Gender",
+        title="Blood Type Distribution by Gender",
+        orientation="h",
+    )
+    c2.plotly_chart(fig)
     st.code(query, "sql")
 
 st.markdown("### :red-background[Difficult Problems]")
@@ -230,32 +235,27 @@ with st.expander(
     c2.bar_chart(df, x="Name", y="NonWorkingDependents", horizontal=True)
     st.code(query, "sql")
 
-with st.expander("Count *bloodtype* by **sex and total**.", icon="🩸"):
+with st.expander(
+    "List all SCs who have *no spouse*, but **has someone dependent** to them.",
+    icon="👨‍👩‍👦",
+):
     query = """
             SELECT 
-                BloodType, 
-                COUNT(CASE WHEN SexAtBirth = 'Male' THEN 1 END) AS MaleCount, 
-                COUNT(CASE WHEN SexAtBirth = 'Female' THEN 1 END) AS FemaleCount, 
-                COUNT(*) AS TotalCount 
-            FROM senior 
-            GROUP BY BloodType;
+                S.ReferenceCode, 
+                S.Name 
+            FROM senior AS S 
+            WHERE 
+                S.ReferenceCode IN (
+                    SELECT DISTINCT D.ReferenceCode 
+                    FROM dependent AS D 
+                    WHERE D.ReferenceCode = S.ReferenceCode
+                ) 
+                AND (
+                    S.SpouseName IS NULL 
+                    OR S.SpouseName = ''
+                );
             """
-    df = pd.read_sql_query(query, conn)
-    c1, c2 = st.columns(2, vertical_alignment="center")
-    c1.dataframe(df, use_container_width=True, hide_index=True)
-    df_melted = df.melt(
-        id_vars=["BloodType"],
-        value_vars=["MaleCount", "FemaleCount"],
-        var_name="Gender",
-        value_name="Count",
+    st.dataframe(
+        pd.read_sql_query(query, conn), use_container_width=True, hide_index=True
     )
-    fig = px.bar(
-        df_melted,
-        x="BloodType",
-        y="Count",
-        color="Gender",
-        title="Blood Type Distribution by Gender",
-        orientation="h",
-    )
-    c2.plotly_chart(fig)
     st.code(query, "sql")
