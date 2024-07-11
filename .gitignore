@@ -166,4 +166,4 @@ cython_debug/
 *.xlsx
 
 # streamlit
-.streamlit
+.streamlit/secrets.toml
