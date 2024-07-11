@@ -1,17 +1,14 @@
 # Information Management Project
 
-## Note
+A Senior Citizen Information System - developed as a final project for Information Management course of the Group 4 of BSCS 2-1 of Polytechnic University of the Philippines.
 
-This branch is for testing purposes, including development of the database, application, and for [cloud deployment tests](https://ncsc-db.streamlit.app/).
-This branch also utilizes sqlite instead of mysql compared to the other branches.
+The application is based on the National Comission of Senior Citizens (NCSC) information form.
 
-## Overview
-
-We made a senior citizen database application that can do the basic CRUD operations.The application is based on the National Commission of Senior Citizens (NCSC) information form.
+The web application supports all the basic CRUD functionalities.
 
 ## Installation
 
-1. Clone the repository.
+1. Clone this repository.
 2. Create a new virtual environment using `python -m venv venv`.
 3. Activate the virtual environment using `.\venv\Scripts\activate` on Windows or `source venv/bin/activate` on Linux.
 4. Install the dependencies using `pip install -r requirements.txt`.
